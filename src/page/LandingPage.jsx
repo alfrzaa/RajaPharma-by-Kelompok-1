@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import logo from '../assets/logo1.png';
+import medicine from '../assets/medicine.png';
+import obat from '../assets/obat.png';
 
-// Logo component - SVG based logo that resembles RajaPharma
+// Logo component
 const Logo = () => (
-  <img src="./assets/logo1.png" alt="RajaPharma Logo" className="h-5 w-auto" />
+  <img src={logo} alt="RajaPharma Logo" className="h-35" />
 );
 
 
@@ -35,9 +38,9 @@ const RajaPharmaApp = () => {
       <div className="w-full flex flex-col md:flex-row">
         {/* Left content */}
         <div className="w-full md:w-1/2 p-12 flex flex-col justify-center">
-          <div className="mb-12">
+          <div className="mb-2">
             <Logo />
-          </div>
+            </div>
           
           <h1 className="text-5xl font-bold text-blue-800 mb-6">RAJAPHARMA</h1>
           
@@ -45,6 +48,7 @@ const RajaPharmaApp = () => {
             ayo beralih ke Rajapharma dan jadikan<br />
             manajemen apotik Anda lebih gesit! 🚀
           </p>
+          
           
           <button 
             onClick={navigateToLogin}
@@ -60,7 +64,7 @@ const RajaPharmaApp = () => {
           
           {/* Medical bottles illustration */}
           <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-            <img src="/api/placeholder/500/400" alt="Medical products" />
+          <img src={medicine} alt="Medical product" />
           </div>
           
           {/* Plus sign decorations */}
@@ -78,7 +82,7 @@ const RajaPharmaApp = () => {
       {/* Left side - Decorative with gradient */}
       <div className="hidden md:block w-1/2 bg-gradient-to-b from-blue-600 to-blue-300 p-12 relative">
         <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <img src="/api/placeholder/400/400" alt="Medication" className="w-80" />
+        <img src={obat} alt="Obat" className="w-80" />
         </div>
       </div>
       
