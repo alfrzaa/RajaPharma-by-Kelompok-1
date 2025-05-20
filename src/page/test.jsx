@@ -20,10 +20,8 @@ const allProducts = [
 // Mock data for users
 const allUsers = [
   { id: 1, name: 'Admin Utama', username: 'admin', role: 'Admin', lastLogin: '28/04/2025, 09:45' },
-  { id: 2, name: 'Budi Santoso', username: 'budi', role: 'Apoteker', lastLogin: '28/04/2025, 08:30' },
-  { id: 3, name: 'Siti Rahma', username: 'siti', role: 'Kasir', lastLogin: '28/04/2025, 09:15' },
-  { id: 4, name: 'Joko Prabowo', username: 'joko', role: 'Kasir', lastLogin: '27/04/2025, 17:20' },
-  { id: 5, name: 'Maya Indah', username: 'maya', role: 'Apoteker', lastLogin: '27/04/2025, 15:45' }
+  { id: 2, name: 'Siti Rahma', username: 'siti', role: 'Kasir', lastLogin: '28/04/2025, 09:15' },
+  { id: 3, name: 'Joko Prabowo', username: 'joko', role: 'Kasir', lastLogin: '27/04/2025, 17:20' },
 ];
 
 // Mock data for transactions
@@ -50,7 +48,7 @@ const allTransactions = [
     ],
     subtotal: 40000,
     total: 40000,
-    paymentMethod: 'QRIS'
+    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237854', 
@@ -73,7 +71,7 @@ const allTransactions = [
     ],
     subtotal: 65000,
     total: 65000,
-    paymentMethod: 'Kartu Debit'
+    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237852', 
@@ -97,7 +95,7 @@ const allTransactions = [
     ],
     subtotal: 75000,
     total: 75000,
-    paymentMethod: 'QRIS'
+    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237850', 
