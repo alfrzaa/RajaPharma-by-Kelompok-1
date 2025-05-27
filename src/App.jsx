@@ -9,15 +9,18 @@ import LoginPage from './page/LoginPage'
 import SalesPage from './page/SalesPage'
 import UserManagement from './page/UserManagement'
 import Report from './page/Report'
+// import Dashboard from './page/dashboard'
 
 function App() {
-  return <div><PharmacyManagement /></div>
   // return <div><PharmacyManagement /></div>
-  // return <Report/>
+  // return <div><PharmacyManagement /></div>
+  return <Report/>
+  // return <Dashboard/>
+  // return <LoginPage/>
   // return <SalesPage />
   // return <UserManagement/>
   // return <div><Dashboard /></div>
-  return <StockManagement />
+  // return <StockManagement />
 
 }
 

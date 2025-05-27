@@ -390,65 +390,44 @@ const Report = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`bg-blue-800 text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 ease-in-out`}>
-        <div className="p-5 flex justify-between items-center">
-          {sidebarOpen && <span className="font-bold text-xl">RajaPharma</span>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 rounded-md hover:bg-blue-700">
-            <Menu size={24} />
-          </button>
+<div className={`bg-blue-800 text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 ease-in-out relative`}>
+  <div className="p-5 flex justify-between items-center">
+    {sidebarOpen && <span className="font-bold text-xl">RajaPharma</span>}
+    <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 rounded-md hover:bg-blue-700">
+      <Menu size={24} />
+    </button>
+  </div>
+
+  <div className="mt-8">
+    {[
+      { key: 'stok', label: 'Stok Obat', icon: Package },
+      { key: 'penjualan', label: 'Penjualan', icon: ShoppingCart },
+      { key: 'laporan', label: 'Laporan', icon: FileText },
+      { key: 'pengguna', label: 'Pengguna', icon: Users }
+    ].map(({ key, label, icon: Icon }) => (
+      <div
+        key={key}
+        className={`px-4 py-3 flex items-center text-white font-medium cursor-pointer hover:bg-blue-700`}
+        // Tidak ada onClick supaya klik tidak melakukan apa-apa
+      >
+        <div className="w-8 flex justify-center">
+          <Icon size={20} />
         </div>
-        
-        <div className="mt-8">
-          <div 
-            className={`px-4 py-3 flex items-center text-white font-medium ${activeSection === 'stok' ? 'bg-blue-700' : 'hover:bg-blue-700'} cursor-pointer`}
-            onClick={() => setActiveSection('stok')}
-          >
-            <div className="w-8 flex justify-center">
-              <Package size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Stok Obat</span>}
-          </div>
-          
-          <div 
-            className={`px-4 py-3 flex items-center text-white font-medium ${activeSection === 'penjualan' ? 'bg-blue-700' : 'hover:bg-blue-700'} cursor-pointer`}
-            onClick={() => setActiveSection('penjualan')}
-          >
-            <div className="w-8 flex justify-center">
-              <ShoppingCart size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Penjualan</span>}
-          </div>
-          
-          <div 
-            className={`px-4 py-3 flex items-center text-white font-medium ${activeSection === 'laporan' ? 'bg-blue-700' : 'hover:bg-blue-700'} cursor-pointer`}
-            onClick={() => setActiveSection('laporan')}
-          >
-            <div className="w-8 flex justify-center">
-              <FileText size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Laporan</span>}
-          </div>
-          
-          <div 
-            className={`px-4 py-3 flex items-center text-white font-medium ${activeSection === 'pengguna' ? 'bg-blue-700' : 'hover:bg-blue-700'} cursor-pointer`}
-            onClick={() => setActiveSection('pengguna')}
-          >
-            <div className="w-8 flex justify-center">
-              <Users size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Pengguna</span>}
-          </div>
-        </div>
-        
-        <div className="absolute bottom-0 left-0 p-4">
-          <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <LogOut size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Keluar</span>}
-          </div>
-        </div>
+        {sidebarOpen && <span className="ml-3">{label}</span>}
       </div>
+    ))}
+  </div>
+
+  <div className="absolute bottom-0 left-0 p-4 w-full">
+    <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer rounded-md">
+      <div className="w-8 flex justify-center">
+        <LogOut size={20} />
+      </div>
+      {sidebarOpen && <span className="ml-3">Keluar</span>}
+    </div>
+  </div>
+</div>
+
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
