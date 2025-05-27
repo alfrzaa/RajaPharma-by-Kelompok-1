@@ -8,11 +8,13 @@ import LandingPage from './page/LandingPage'
 import LoginPage from './page/LoginPage'
 import SalesPage from './page/SalesPage'
 import UserManagement from './page/UserManagement'
+import Report from './page/Report'
 
 function App() {
   // return <div><PharmacyManagement /></div>
+  return <Report/>
   // return <SalesPage />
-  return <UserManagement/>
+  // return <UserManagement/>
   // return <div><Dashboard /></div>
   // return <StockManagement />
   // return <ReportsSection />
