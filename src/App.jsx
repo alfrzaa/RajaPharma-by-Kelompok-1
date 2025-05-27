@@ -1,27 +1,24 @@
 import './App.css'
 import PharmacyManagement from './page/test'
-import Dashboard from './page/dashboard'
+import Dashboard from './page/Dashboard'
 import StockManagement from './page/stok_obat'
 import laporan from './page/laporan'
 import ReportsSection from './page/laporan'
-import RajaPharmaApp from './page/LandingPage'
+import LandingPage from './page/LandingPage'
 import LoginPage from './page/LoginPage'
+import SalesPage from './page/SalesPage'
+import UserManagement from './page/UserManagement'
+import Report from './page/Report'
 
 function App() {
   return <div><PharmacyManagement /></div>
+  // return <div><PharmacyManagement /></div>
+  // return <Report/>
+  // return <SalesPage />
+  // return <UserManagement/>
   // return <div><Dashboard /></div>
   return <StockManagement />
-  // return <ReportsSection />
-  // return <RajaPharmaApp />
-  // return <LoginPage />
-  // return (
-  //   <Router>
-  //     <Routes>
-  //       <Route path="/" element={<LandingPage />} />
-  //       <Route path="/LoginPage" element={<LoginPage />} />
-  //     </Routes>
-  //   </Router>
-  // );
+
 }
 
 export default App
