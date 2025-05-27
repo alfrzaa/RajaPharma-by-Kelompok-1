@@ -99,14 +99,11 @@ const Dashboard = () => {
             
             <div className="flex items-center">
               <div className="flex items-center">
-                <div className="h-9 w-9 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold mr-2">
-                  A
-                </div>
                 <div className="hidden md:block">
-                  <div className="text-sm font-medium text-gray-700">Admin</div>
+                  {/* <div className="text-sm font-medium text-gray-700">Admin</div> */}
                   <div className="text-xs text-gray-500">admin@apotekraja.com</div>
                 </div>
-                <ChevronDown className="ml-2 text-gray-500" size={16} />
+                {/* <ChevronDown className="ml-2 text-gray-500" size={16} /> */}
               </div>
             </div>
           </div>
@@ -121,7 +118,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Stok Menipis</p>
                   <h3 className="text-2xl font-bold text-gray-800">12</h3>
-                  <p className="text-xs text-red-500 mt-1">Perlu pengadaan segera</p>
+                  {/* <p className="text-xs text-red-500 mt-1">Perlu pengadaan segera</p> */}
                 </div>
                 <div className="bg-yellow-100 p-2 rounded-md">
                   <AlertTriangle className="text-yellow-500" size={24} />
@@ -134,7 +131,7 @@ const Dashboard = () => {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Obat Kedaluwarsa</p>
                   <h3 className="text-2xl font-bold text-gray-800">14</h3>
-                  <p className="text-xs text-red-500 mt-1">Dalam 3 bulan ke depan</p>
+                  {/* <p className="text-xs text-red-500 mt-1">Dalam 3 bulan ke depan</p> */}
                 </div>
                 <div className="bg-red-100 p-2 rounded-md">
                   <Bell className="text-red-500" size={24} />

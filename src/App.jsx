@@ -12,14 +12,14 @@ import Report from './page/Report'
 
 function App() {
   // return <div><PharmacyManagement /></div>
-  return <Report/>
+  // return <Report/>
   // return <SalesPage />
   // return <UserManagement/>
   // return <div><Dashboard /></div>
   // return <StockManagement />
   // return <ReportsSection />
   // return <LandingPage />
-  // return <LoginPage />
+  return <LoginPage />
   // return (
   //   <Router>
   //     <Routes>
