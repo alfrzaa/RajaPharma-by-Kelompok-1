@@ -8,11 +8,11 @@ import RajaPharmaApp from './page/LandingPage'
 import LoginPage from './page/LoginPage'
 
 function App() {
-  // return <div><PharmacyManagement /></div>
+  return <div><PharmacyManagement /></div>
   // return <div><Dashboard /></div>
-  // return <StockManagement />
+  return <StockManagement />
   // return <ReportsSection />
-  return <RajaPharmaApp />
+  // return <RajaPharmaApp />
   // return <LoginPage />
   // return (
   //   <Router>
