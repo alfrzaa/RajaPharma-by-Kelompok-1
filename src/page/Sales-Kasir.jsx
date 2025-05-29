@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Search, Package, ShoppingCart, FileText, Users, LogOut, ChevronDown, Plus, Minus, X, Printer, CreditCard } from 'lucide-react';
+import { Menu, Search, Package, ShoppingCart, FileText, Users, LogOut, ChevronDown, Plus, Minus, X, Printer, CreditCard, Home } from 'lucide-react';
 
 // Mock data for medications
 const allProducts = [
@@ -21,6 +21,7 @@ const categories = [...new Set(allProducts.map(product => product.category))];
 
 const SalesPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeMenu, setActiveMenu] = useState('penjualan');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [cart, setCart] = useState([]);
@@ -52,7 +53,7 @@ const SalesPage = () => {
   
   // Calculate cart totals
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = 0; // Tax can be added if needed
+  const tax = 0;
   const total = subtotal + tax;
   
   // Add product to cart
@@ -100,7 +101,6 @@ const SalesPage = () => {
       return;
     }
     
-    // Create receipt
     const newReceipt = {
       id: `INV-${Date.now().toString().slice(-6)}`,
       date: new Date().toLocaleString('id-ID'),
@@ -131,56 +131,48 @@ const SalesPage = () => {
     return value.toLocaleString('id-ID');
   };
   
-  return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className={`bg-blue-800 text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 ease-in-out`}>
-        <div className="p-5 flex justify-between items-center">
-          {sidebarOpen && <span className="font-bold text-xl">RajaPharma</span>}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 rounded-md hover:bg-blue-700">
-            <Menu size={24} />
-          </button>
-        </div>
-        
-        <div className="mt-8">
-          <div className="px-4 py-3 flex items-center text-white font-medium bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <ShoppingCart size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Penjualan</span>}
-          </div>
-          
-          <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <Package size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Stok Obat</span>}
-          </div>
-          
-          <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <FileText size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Laporan</span>}
-          </div>
-          
-          <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <Users size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Pengguna</span>}
-          </div>
-        </div>
-        
-        <div className="absolute bottom-0 left-0 p-4">
-          <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-blue-700 cursor-pointer">
-            <div className="w-8 flex justify-center">
-              <LogOut size={20} />
-            </div>
-            {sidebarOpen && <span className="ml-3">Keluar</span>}
-          </div>
-        </div>
-      </div>
+ return (
+       <div className="flex h-screen bg-gray-100">
+         {/* Sidebar */}
+         <div className={`bg-[#1A6291] text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 ease-in-out flex flex-col`}>
+           <div className="p-5 flex justify-between items-center">
+             {sidebarOpen && <span className="font-bold text-xl">RajaPharma</span>}
+             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 rounded-md hover:bg-[#134b73]">
+               <Menu size={24} />
+             </button>
+           </div>
+           
+           <div className="mt-8 flex-1">
+             <div 
+               className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${activeMenu === 'dashboard' ? 'bg-[#134b73] border-r-4 border-white' : ''}`}
+               onClick={() => setActiveMenu('dashboard')}
+             >
+               <div className="w-8 flex justify-center">
+                 <Home size={20} />
+               </div>
+               {sidebarOpen && <span className="ml-3">Dashboard</span>}
+             </div>
+             
+             <div 
+               className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${activeMenu === 'sales' ? 'bg-[#134b73] border-r-4 border-white' : ''}`}
+               onClick={() => setActiveMenu('sales')}
+             >
+               <div className="w-8 flex justify-center">
+                 <ShoppingCart size={20} />
+               </div>
+               {sidebarOpen && <span className="ml-3">Penjualan</span>}
+             </div>
+           </div>
+           
+           <div className="mt-auto mb-4">
+             <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer">
+               <div className="w-8 flex justify-center">
+                 <LogOut size={20} />
+               </div>
+               {sidebarOpen && <span className="ml-3">Keluar</span>}
+             </div>
+           </div>
+         </div>
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -189,7 +181,7 @@ const SalesPage = () => {
           <div className="p-4 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">Penjualan Obat</h1>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600">Admin RajaPharma</span>
+              <span className="text-gray-600">Kasir RajaPharma</span>
             </div>
           </div>
         </div>
@@ -243,7 +235,7 @@ const SalesPage = () => {
               </div>
               
               <div className="mt-8 flex justify-center space-x-4">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center">
+                <button className="px-4 py-2 bg-[#1A6291] text-white rounded hover:bg-[#134b73] flex items-center">
                   <Printer size={18} className="mr-2" />
                   Cetak Struk
                 </button>
@@ -257,25 +249,24 @@ const SalesPage = () => {
             </div>
           </div>
         ) : (
-          // Main POS Interface
           <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
             {/* Product List */}
             <div className="w-full md:w-3/5 p-4 md:p-6 overflow-auto">
-              <div className="mb-6 flex flex-col md:flex-row justify-between space-y-4 md:space-y-0">
-                <div className="relative w-full md:w-64">
+              <div className="mb-6 flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+                <div className="relative flex-1">
                   <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Cari obat..."
-                    className="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-[#1A6291]"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 
-                <div className="relative w-full md:w-auto">
+                <div className="relative w-full md:w-48">
                   <select
-                    className="pl-4 pr-10 py-2 border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    className="pl-4 pr-10 py-2 border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#1A6291] w-full bg-white"
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
                   >
@@ -292,27 +283,30 @@ const SalesPage = () => {
                 {filteredProducts.map(product => (
                   <div 
                     key={product.id}
-                    className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200"
+                    className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 min-h-[140px] flex flex-col justify-between"
                     onClick={() => product.stock > 0 && addToCart(product)}
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-medium text-gray-800">{product.name}</h3>
-                        <p className="text-sm text-gray-500">{product.category}</p>
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1 pr-2">
+                          <h3 className="font-medium text-gray-800 text-sm leading-tight">{product.name}</h3>
+                          <p className="text-xs text-gray-500 mt-1">{product.category}</p>
+                        </div>
+                        <span className={`text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${
+                          product.stock > 20 ? 'bg-green-100 text-green-800' : 
+                          product.stock > 5 ? 'bg-yellow-100 text-yellow-800' : 
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          Stok: {product.stock}
+                        </span>
                       </div>
-                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                        product.stock > 20 ? 'bg-green-100 text-green-800' : 
-                        product.stock > 5 ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        Stok: {product.stock}
-                      </span>
                     </div>
-                    <div className="mt-3 flex justify-between items-center">
-                      <span className="font-bold text-blue-600">Rp {formatCurrency(product.price)}</span>
+                    
+                    <div className="flex justify-between items-center mt-3">
+                      <span className="font-bold text-[#1A6291] text-sm">Rp {formatCurrency(product.price)}</span>
                       <button 
-                        className={`px-3 py-1 rounded text-white ${
-                          product.stock > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400'
+                        className={`px-2 py-1 rounded text-white text-sm ${
+                          product.stock > 0 ? 'bg-[#1A6291] hover:bg-[#134b73]' : 'bg-gray-400'
                         }`}
                         disabled={product.stock === 0}
                       >
@@ -342,7 +336,7 @@ const SalesPage = () => {
                     {cart.map(item => (
                       <div key={item.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
                         <div className="flex-1">
-                          <h3 className="font-medium">{item.name}</h3>
+                          <h3 className="font-medium text-sm">{item.name}</h3>
                           <p className="text-sm text-gray-600">Rp {formatCurrency(item.price)}</p>
                         </div>
                         
@@ -391,12 +385,6 @@ const SalesPage = () => {
                     <span className="text-gray-600">Subtotal</span>
                     <span>Rp {formatCurrency(subtotal)}</span>
                   </div>
-                  {tax > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Pajak</span>
-                      <span>Rp {formatCurrency(tax)}</span>
-                    </div>
-                  )}
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
                     <span>Rp {formatCurrency(total)}</span>
@@ -404,7 +392,7 @@ const SalesPage = () => {
                 </div>
                 
                 <button 
-                  className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400"
+                  className="w-full py-3 bg-[#1A6291] text-white rounded-lg font-medium hover:bg-[#134b73] disabled:bg-gray-400"
                   disabled={cart.length === 0}
                   onClick={() => setShowPaymentModal(true)}
                 >
@@ -441,7 +429,7 @@ const SalesPage = () => {
                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
                     <input 
                       type="text" 
-                      className="pl-10 pr-4 py-3 border rounded-lg w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="pl-10 pr-4 py-3 border rounded-lg w-full text-lg focus:outline-none focus:ring-2 focus:ring-[#1A6291]"
                       value={cashAmount}
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, '');
@@ -455,7 +443,7 @@ const SalesPage = () => {
                   {[10000, 20000, 50000, 100000, 200000, 500000].map(amount => (
                     <button 
                       key={amount}
-                      className="py-2 border rounded-lg hover:bg-gray-50"
+                      className="py-2 border rounded-lg hover:bg-gray-50 text-xs"
                       onClick={() => setCashAmount(amount.toString())}
                     >
                       Rp {formatCurrency(amount)}

@@ -1,25 +1,31 @@
 import './App.css'
 import PharmacyManagement from './page/test'
-import Dashboard from './page/Dashboard'
-import StockManagement from './page/stok_obat'
+import Dashboard from './page/Dashboard-Admin'
+import StockManagement from './page/StockManagement-Admin'
 import laporan from './page/laporan'
 import ReportsSection from './page/laporan'
 import LandingPage from './page/LandingPage'
 import LoginPage from './page/LoginPage'
-import SalesPage from './page/SalesPage'
+import SalesPage from './page/Sales-Kasir'
 import UserManagement from './page/UserManagement'
 import Report from './page/Report'
+// import Dashboard from './page/Dashboard-Kasir'
+import DashboardKasir from './page/Dashboard-Kasir'
 
 function App() {
+  // return <Dashboard />
+  return <DashboardKasir/>
+  // return <StockManagement />
+  // return <SalesPage />
+
   // return <div><PharmacyManagement /></div>
   // return <Report/>
-  // return <SalesPage />
+  
   // return <UserManagement/>
-  // return <div><Dashboard /></div>
-  // return <StockManagement />
+  
   // return <ReportsSection />
   // return <LandingPage />
-  return <LoginPage />
+  // return <LoginPage />
   // return (
   //   <Router>
   //     <Routes>
