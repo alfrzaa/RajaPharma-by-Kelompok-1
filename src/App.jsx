@@ -11,6 +11,7 @@ import UserManagement from './page/UserManagement'
 import Report from './page/Report'
 // import Dashboard from './page/Dashboard-Kasir'
 import DashboardKasir from './page/Dashboard-Kasir'
+import ReportAdmin from './page/Report-Admin'
 
 function App() {
   // return <Dashboard />
@@ -18,15 +19,17 @@ function App() {
   // return <StockManagement />
   // return <SalesPage />
   // return <LandingPage />
+  //  return <LoginPage />
 
   // return <div><PharmacyManagement /></div>
   // return <Report/>
+  return <ReportAdmin/>
   
   // return <UserManagement/>
   
   // return <ReportsSection />
   
-  return <LoginPage />
+ 
   // return (
   //   <Router>
   //     <Routes>
