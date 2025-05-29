@@ -4,14 +4,15 @@ import obat from '../assets/obat.png';
 // Login Page Component
 const LoginPage = ({ onNavigateToHome }) => {
   const [selectedRole, setSelectedRole] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   
   // Login handler
   const handleLogin = () => {
-    console.log('Login attempt with:', selectedRole, password);
+    console.log('Login attempt with:', selectedRole, username, password);
     // Add actual login logic here
-    alert(`Login functionality would go here for role: ${selectedRole}`);
+    alert(`Login attempt for role: ${selectedRole}, username: ${username}`);
   };
 
   return (
@@ -26,13 +27,14 @@ const LoginPage = ({ onNavigateToHome }) => {
       {/* Right side - Login form */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
-          <div className="mb-8 text-center">
+          <div className="mb-6 text-center">
             <h2 className="text-sm text-gray-600">Welcome to <span className="text-[#1A6291] font-medium">RajaPharma</span></h2>
             <h1 className="text-3xl font-bold mt-2">Login</h1>
           </div>
           
           <div>
-            <div className="mb-6">
+            {/* Role selection */}
+            <div className="mb-4">
               <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
                 Select your role
               </label>
@@ -47,10 +49,26 @@ const LoginPage = ({ onNavigateToHome }) => {
                 <option value="kasir">Kasir</option>
               </select>
             </div>
+
+            {/* Username */}
+            <div className="mb-4">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1A6291] focus:border-[#1A6291]"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
             
-            <div className="mb-8">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Enter your Password
+            {/* Password */}
+            <div className="mb-5">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
               </label>
               <div className="relative">
                 <input
@@ -63,7 +81,7 @@ const LoginPage = ({ onNavigateToHome }) => {
                 />
                 <button 
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500"
                   onClick={() => setPasswordVisible(!passwordVisible)}
                 >
                   {passwordVisible ? (
@@ -78,9 +96,12 @@ const LoginPage = ({ onNavigateToHome }) => {
                     </svg>
                   )}
                 </button>
+                <p className="text-xs text-gray-500 mt-2">* Password harus minimal 8 karakter</p>
               </div>
             </div>
+
             
+            {/* Login Button */}
             <button
               onClick={handleLogin}
               className="w-full bg-[#1A6291] text-white font-medium py-3 px-4 rounded-lg hover:bg-[#134b73] transition"
@@ -88,7 +109,8 @@ const LoginPage = ({ onNavigateToHome }) => {
               Login
             </button>
             
-            <div className="mt-4 text-center">
+            {/* Back to Home */}
+            <div className="mt-2 text-center">
               <button 
                 onClick={onNavigateToHome} 
                 className="text-[#134b73] hover:underline text-sm"

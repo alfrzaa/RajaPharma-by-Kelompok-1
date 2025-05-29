@@ -16,11 +16,11 @@ function App() {
   // return <StockManagement />
   // return <SalesPage />
   // return <LandingPage />
-  // return <LoginPage />
+  return <LoginPage />
   // return <ReportAdmin/>
 
   // return <div><PharmacyManagement /></div>
-  return <UserManagement/>
+  // return <UserManagement/>
 }
 
 export default App
