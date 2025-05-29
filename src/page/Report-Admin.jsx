@@ -13,7 +13,6 @@ const allTransactions = [
     ],
     subtotal: 50000,
     total: 50000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237855', 
@@ -25,7 +24,6 @@ const allTransactions = [
     ],
     subtotal: 40000,
     total: 40000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237854', 
@@ -37,7 +35,6 @@ const allTransactions = [
     ],
     subtotal: 36000,
     total: 36000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237853', 
@@ -48,7 +45,6 @@ const allTransactions = [
     ],
     subtotal: 65000,
     total: 65000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237852', 
@@ -60,7 +56,6 @@ const allTransactions = [
     ],
     subtotal: 42000,
     total: 42000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237851', 
@@ -72,7 +67,6 @@ const allTransactions = [
     ],
     subtotal: 75000,
     total: 75000,
-    paymentMethod: 'Tunai'
   },
   { 
     id: 'INV-237850', 
@@ -84,7 +78,6 @@ const allTransactions = [
     ],
     subtotal: 62000,
     total: 62000,
-    paymentMethod: 'Tunai'
   }
 ];
 
@@ -166,6 +159,16 @@ const ReportAdmin = () => {
       case 'users': return 'Manajemen Pengguna';
       default: return 'Laporan Penjualan';
     }
+  };
+
+  // Get category for item
+  const getItemCategory = (itemName) => {
+    if (itemName.includes('Vitamin')) return 'Vitamin';
+    if (itemName.includes('Paracetamol') || itemName.includes('Ibuprofen') || itemName.includes('Cetirizine')) return 'Analgesik';
+    if (itemName.includes('Amoxicillin')) return 'Antibiotik';
+    if (itemName.includes('Sirup') || itemName.includes('Inhaler')) return 'Obat Batuk';
+    if (itemName.includes('Amlodipine') || itemName.includes('Metformin')) return 'Obat Kronis';
+    return 'Obat';
   };
   
   return (
@@ -249,26 +252,34 @@ const ReportAdmin = () => {
         {activeMenu === 'reports' && (
           <div className="flex-1 p-6 overflow-auto">
             {/* Date Range Filter */}
-            <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
-                <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                  <label className="text-sm font-medium text-gray-700">Filter Tanggal:</label>
-                  <div className="flex items-center space-x-2">
+            <div className="mb-6 bg-white p-6 rounded-lg shadow-sm border">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter Laporan</h3>
+              <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between space-y-4 lg:space-y-0 lg:space-x-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-end space-y-3 sm:space-y-0 sm:space-x-4 flex-1">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
                     <div className="relative">
-                      <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Calendar size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="date"
-                        className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
                         value={dateRange.start}
                         onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
                       />
                     </div>
-                    <span className="text-gray-500">sampai</span>
+                  </div>
+                  
+                  <div className="flex items-end">
+                    <span className="text-gray-500 font-medium mb-3 px-2">sampai</span>
+                  </div>
+                  
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
                     <div className="relative">
-                      <Calendar size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Calendar size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="date"
-                        className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto"
                         value={dateRange.end}
                         onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
                       />
@@ -277,7 +288,7 @@ const ReportAdmin = () => {
                 </div>
                 
                 <button 
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center font-medium shadow-sm"
                   onClick={generatePDF}
                 >
                   <Download size={18} className="mr-2" />
@@ -339,16 +350,16 @@ const ReportAdmin = () => {
                         No. Invoice
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tanggal
+                        Tanggal & Waktu
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Kasir
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Total
+                        Item
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Metode Bayar
+                        Total
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Aksi
@@ -364,17 +375,17 @@ const ReportAdmin = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                           {transaction.date}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                          {transaction.cashier}
-                        </td>
+                        <td className="px-4 py-3">{transaction.cashier}</td>
+                            <td className="px-4 py-3">
+                              {transaction.items.length} item
+                              <span className="text-gray-500 text-sm ml-1">
+                                ({transaction.items.map(item => item.name).join(", ").substring(0, 30)}
+                                {transaction.items.map(item => item.name).join(", ").length > 30 ? "..." : ""})
+                              </span>
+                            </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="font-medium text-green-600">
+                          <span className="text-gray-900">
                             Rp {formatCurrency(transaction.total)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                            {transaction.paymentMethod}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -424,57 +435,58 @@ const ReportAdmin = () => {
       
       {/* Transaction Detail Modal */}
       {showTransactionDetail && selectedTransaction && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold">Detail Transaksi</h3>
-              <button 
-                className="text-gray-400 hover:text-gray-600"
-                onClick={() => setShowTransactionDetail(false)}
-              >
-                <X size={24} />
-              </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            {/* Modal Header */}
+            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-gray-900">Detail Transaksi {selectedTransaction.id}</h3>
+                <button 
+                  className="text-gray-400 hover:text-gray-600 p-1"
+                  onClick={() => setShowTransactionDetail(false)}
+                >
+                  <X size={24} />
+                </button>
+              </div>
             </div>
             
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-600">No. Invoice</label>
-                  <p className="font-medium">{selectedTransaction.id}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Tanggal</label>
-                  <p className="font-medium">{selectedTransaction.date}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Kasir</label>
-                  <p className="font-medium">{selectedTransaction.cashier}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-600">Metode Bayar</label>
-                  <p className="font-medium">{selectedTransaction.paymentMethod}</p>
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+              {/* Transaction Info */}
+              <div className="mb-6">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-600 font-medium">Tanggal & Waktu</span>
+                    <p className="text-gray-900 font-semibold mt-2">{selectedTransaction.date}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-600 font-medium">Kasir</span>
+                    <p className="text-gray-900 font-semibold mt-2">{selectedTransaction.cashier}</p>
+                  </div>
                 </div>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-2">Item yang Dibeli:</h4>
-                <div className="border rounded-lg overflow-hidden">
+              {/* Items Table */}
+              <div className="mb-6">
+                <div className="overflow-hidden border border-gray-200 rounded-lg">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-4 py-2 text-left">Item</th>
-                        <th className="px-4 py-2 text-right">Qty</th>
-                        <th className="px-4 py-2 text-right">Harga</th>
-                        <th className="px-4 py-2 text-right">Subtotal</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Produk</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Kategori</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Harga</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Jumlah</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase">Subtotal</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-200">
                       {selectedTransaction.items.map(item => (
-                        <tr key={item.id} className="border-t">
-                          <td className="px-4 py-2">{item.name}</td>
-                          <td className="px-4 py-2 text-right">{item.quantity}</td>
-                          <td className="px-4 py-2 text-right">Rp {formatCurrency(item.price)}</td>
-                          <td className="px-4 py-2 text-right">Rp {formatCurrency(item.price * item.quantity)}</td>
+                        <tr key={item.id}>
+                          <td className="px-4 py-3 text-gray-900 font-medium">{item.name}</td>
+                          <td className="px-4 py-3 text-gray-600">{getItemCategory(item.name)}</td>
+                          <td className="px-4 py-3 text-right text-gray-900">Rp{formatCurrency(item.price)}</td>
+                          <td className="px-4 py-3 text-right text-gray-900">{item.quantity}</td>
+                          <td className="px-4 py-3 text-right text-gray-900 font-medium">Rp{formatCurrency(item.price * item.quantity)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -482,23 +494,20 @@ const ReportAdmin = () => {
                 </div>
               </div>
               
-              <div className="border-t pt-4">
-                <div className="flex justify-between font-bold text-lg">
-                  <span>Total:</span>
-                  <span>Rp {formatCurrency(selectedTransaction.total)}</span>
+              {/* Totals */}
+              <div className="space-y-2 mb-6">
+                <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
+                  <span>Total</span>
+                  <span>Rp{formatCurrency(selectedTransaction.total)}</span>
                 </div>
               </div>
-              
-              <div className="flex space-x-3 pt-4">
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
+              <div className="flex justify-end">
                 <button 
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center"
-                  onClick={() => reprintTransaction(selectedTransaction)}
-                >
-                  <Printer size={18} className="mr-2" />
-                  Cetak Ulang
-                </button>
-                <button 
-                  className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   onClick={() => setShowTransactionDetail(false)}
                 >
                   Tutup
