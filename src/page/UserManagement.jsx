@@ -6,8 +6,6 @@ const allUsers = [
   { id: 1, name: 'Admin Utama', username: 'admin', role: 'Admin', lastLogin: '28/04/2025, 09:45' },
   { id: 2, name: 'Siti Rahma', username: 'siti', role: 'Kasir', lastLogin: '28/04/2025, 09:15' },
   { id: 3, name: 'Joko Prabowo', username: 'joko', role: 'Kasir', lastLogin: '27/04/2025, 17:20' },
-  { id: 4, name: 'Dr. Maya Sari', username: 'maya', role: 'Apoteker', lastLogin: '28/04/2025, 08:30' },
-  { id: 5, name: 'Budi Santoso', username: 'budi', role: 'Kasir', lastLogin: '27/04/2025, 16:45' },
 ];
 
 const UserManagement = () => {
@@ -184,26 +182,6 @@ const UserManagement = () => {
               </button>
             </div>
 
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                <h3 className="text-blue-800 font-medium mb-1">Total Pengguna</h3>
-                <p className="text-2xl font-bold">{allUsers.length}</p>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg border border-red-100">
-                <h3 className="text-red-800 font-medium mb-1">Admin</h3>
-                <p className="text-2xl font-bold">{allUsers.filter(u => u.role === 'Admin').length}</p>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-                <h3 className="text-green-800 font-medium mb-1">Apoteker</h3>
-                <p className="text-2xl font-bold">{allUsers.filter(u => u.role === 'Apoteker').length}</p>
-              </div>
-              <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                <h3 className="text-purple-800 font-medium mb-1">Kasir</h3>
-                <p className="text-2xl font-bold">{allUsers.filter(u => u.role === 'Kasir').length}</p>
-              </div>
-            </div>
-
             {/* Users Table */}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
@@ -223,12 +201,7 @@ const UserManagement = () => {
                     <tr key={user.id} className="border-t border-gray-200 hover:bg-gray-50">
                       <td className="px-4 py-3 font-medium">#{user.id}</td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
-                            {user.name.charAt(0).toUpperCase()}
-                          </div>
-                          {user.name}
-                        </div>
+                        <td className="px-4 py-3">{user.name}</td>
                       </td>
                       <td className="px-4 py-3">{user.username}</td>
                       <td className="px-4 py-3">
@@ -346,7 +319,6 @@ const UserManagement = () => {
                     onChange={handleUserFormChange}
                   >
                     <option value="Admin">Admin</option>
-                    <option value="Apoteker">Apoteker</option>
                     <option value="Kasir">Kasir</option>
                   </select>
                 </div>
