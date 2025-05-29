@@ -14,9 +14,10 @@ import DashboardKasir from './page/Dashboard-Kasir'
 
 function App() {
   // return <Dashboard />
-  return <DashboardKasir/>
+  // return <DashboardKasir/>
   // return <StockManagement />
   // return <SalesPage />
+  // return <LandingPage />
 
   // return <div><PharmacyManagement /></div>
   // return <Report/>
@@ -24,8 +25,8 @@ function App() {
   // return <UserManagement/>
   
   // return <ReportsSection />
-  // return <LandingPage />
-  // return <LoginPage />
+  
+  return <LoginPage />
   // return (
   //   <Router>
   //     <Routes>

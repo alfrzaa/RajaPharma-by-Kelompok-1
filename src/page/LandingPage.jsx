@@ -4,7 +4,7 @@ import medicine from '../assets/medicine1.png';
 
 // Logo component
 const Logo = () => (
-  <img src={logo} alt="RajaPharma Logo" className="h-35" />
+  <img src={logo} alt="RajaPharma Logo" className="h-30" />
 );
 
 // Landing Page Component
@@ -18,16 +18,16 @@ const LandingPage = ({ onNavigateToLogin }) => {
             <Logo />
           </div>
           
-          <h1 className="text-5xl font-bold text-blue-800 mb-6">RAJAPHARMA</h1>
+          <h1 className="text-5xl font-bold text-[#1A6291] mb-6 ml-8">RAJAPHARMA</h1>
           
-          <p className="text-lg text-gray-800 mb-8">
-            ayo beralih ke Rajapharma dan jadikan<br />
+          <p className="text-lg text-gray-800 mb-8 ml-8">
+            Ayo beralih ke Rajapharma dan jadikan<br />
             manajemen apotik Anda lebih gesit! 🚀
           </p>
           
           <button 
             onClick={onNavigateToLogin}
-            className="bg-blue-700 text-white font-medium py-3 px-10 rounded-md shadow-md hover:bg-blue-800 transition w-32"
+            className="bg-[#1A6291] text-white font-medium py-3 px-10 rounded-md shadow-md hover:bg-[#134b73] transition w-32 ml-8"
           >
             Login
           </button>

@@ -17,7 +17,7 @@ const LoginPage = ({ onNavigateToHome }) => {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Decorative with gradient */}
-      <div className="hidden md:block w-1/2 bg-gradient-to-b from-blue-600 to-blue-300 p-12 relative">
+      <div className="hidden md:block w-1/2 bg-gradient-to-b from-[#1A6291] to-blue-300 p-12 relative">
         <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <img src={obat} alt="Obat" className="w-80" />
         </div>
@@ -27,7 +27,7 @@ const LoginPage = ({ onNavigateToHome }) => {
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
           <div className="mb-8 text-center">
-            <h2 className="text-sm text-gray-600">Welcome to <span className="text-blue-600 font-medium">RajaPharma</span></h2>
+            <h2 className="text-sm text-gray-600">Welcome to <span className="text-[#1A6291] font-medium">RajaPharma</span></h2>
             <h1 className="text-3xl font-bold mt-2">Login</h1>
           </div>
           
@@ -38,7 +38,7 @@ const LoginPage = ({ onNavigateToHome }) => {
               </label>
               <select
                 id="role"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1A6291] focus:border-[#1A6291] bg-white"
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
               >
@@ -83,7 +83,7 @@ const LoginPage = ({ onNavigateToHome }) => {
             
             <button
               onClick={handleLogin}
-              className="w-full bg-blue-700 text-white font-medium py-3 px-4 rounded-lg hover:bg-blue-800 transition"
+              className="w-full bg-[#1A6291] text-white font-medium py-3 px-4 rounded-lg hover:bg-[#134b73] transition"
             >
               Login
             </button>
@@ -91,7 +91,7 @@ const LoginPage = ({ onNavigateToHome }) => {
             <div className="mt-4 text-center">
               <button 
                 onClick={onNavigateToHome} 
-                className="text-blue-600 hover:underline text-sm"
+                className="text-[#134b73] hover:underline text-sm"
               >
                 Back to Home
               </button>
