@@ -11,12 +11,12 @@ import DashboardKasir from './page/Dashboard-Kasir'
 import ReportAdmin from './page/Report-Admin'
 
 function App() {
-  // return <Dashboard />
+  return <Dashboard />
   // return <DashboardKasir/>
   // return <StockManagement />
   // return <SalesPage />
   // return <LandingPage />
-  return <LoginPage />
+  // return <LoginPage />
   // return <ReportAdmin/>
 
   // return <div><PharmacyManagement /></div>
