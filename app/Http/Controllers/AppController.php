@@ -22,8 +22,20 @@ class AppController extends Controller
     public function dashboard_admin() {
         return Inertia::render('Dashboard-Admin');
     }
+
     public function report_admin() {
         return Inertia::render('Report-Admin');
     }
 
+    public function stock_management() {
+        return Inertia::render('StockManagement-Admin');
+    }
+
+    public function sales () {
+        return Inertia::render('Sales-Kasir');
+    }
+
+    public function test () {
+        return Inertia::render('test');
+    }
 }
