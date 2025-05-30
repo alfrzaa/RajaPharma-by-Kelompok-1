@@ -237,7 +237,7 @@ const ReportAdmin = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-white shadow-sm z-10">
+        <div className="bg-white shadow-sm z-10 border-b-2 border-[#1A6291]">
           <div className="p-4 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-800">
               {getPageTitle()}

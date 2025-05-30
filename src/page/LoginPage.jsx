@@ -40,7 +40,7 @@ const LoginPage = ({ onNavigateToHome }) => {
               </label>
               <select
                 id="role"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1A6291] focus:border-[#1A6291] bg-white"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring- focus:ring-[#1A6291] focus:border-[#1A6291] bg-white"
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
               >
