@@ -1,19 +1,34 @@
 import React, { useState } from "react";
+import axios from "axios"; // pastikan axios sudah di-install
 import obat from "../assets/obat.png";
 import { Inertia } from "@inertiajs/inertia";
 
-// Login Page Component
 const LoginPage = ({ onNavigateToHome }) => {
-    const [selectedRole, setSelectedRole] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [selectedRole, setSelectedRole] = useState(""); // untuk role admin atau kasir
+    const [username, setUsername] = useState(""); // untuk username
+    const [password, setPassword] = useState(""); // untuk password
+    const [passwordVisible, setPasswordVisible] = useState(false); // untuk melihat password
+    const [errorMessage, setErrorMessage] = useState(""); // untuk menampilkan pesan error
 
     // Login handler
-    const handleLogin = () => {
-        console.log("Login attempt with:", selectedRole, username, password);
-        // Add actual login logic here
-        alert(`Login attempt for role: ${selectedRole}, username: ${username}`);
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post("/login", {
+                username: username,
+                password: password,
+            });
+
+            if (response.data.status === "success") {
+                Inertia.get(route("dashboard_" + selectedRole)); // Redirect berdasarkan role
+            } else {
+                setErrorMessage(response.data.message); // Tampilkan pesan error jika login gagal
+            }
+        } catch (error) {
+            console.error("Login failed", error);
+            setErrorMessage("Login failed. Please try again."); // Tampilkan error jika terjadi kesalahan
+        }
     };
 
     return (
@@ -153,6 +168,13 @@ const LoginPage = ({ onNavigateToHome }) => {
                                 </p>
                             </div>
                         </div>
+
+                        {/* Display error message */}
+                        {errorMessage && (
+                            <div className="mb-4 text-red-500 text-center">
+                                {errorMessage}
+                            </div>
+                        )}
 
                         {/* Login Button */}
                         <button
