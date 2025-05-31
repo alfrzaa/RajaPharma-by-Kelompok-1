@@ -278,8 +278,7 @@ const StockManagement = () => {
             <div className="flex items-center">
               <div className="flex items-center">
                 <div className="text-right">
-                  <div className="text-sm font-semibold text-gray-800">Administrator</div>
-                  <div className="text-xs text-gray-500">admin@apotekraja.com</div>
+                  <div className="text-sm font-semibold text-gray-800">Administrator RajaPharma</div>
                 </div>
               </div>
             </div>

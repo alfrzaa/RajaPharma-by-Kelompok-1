@@ -243,7 +243,7 @@ const ReportAdmin = () => {
               {getPageTitle()}
             </h1>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600">Admin RajaPharma</span>
+              <span className="text-black">Administrator RajaPharma</span>
             </div>
           </div>
         </div>
@@ -252,7 +252,7 @@ const ReportAdmin = () => {
         {activeMenu === 'reports' && (
           <div className="flex-1 p-6 overflow-auto">
             {/* Date Range Filter */}
-            <div className="mb-6 bg-white p-6 rounded-lg shadow-sm border">
+            <div className="mb-6 bg-white p-6 rounded-lg shadow-sm">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter Laporan</h3>
               <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between space-y-4 lg:space-y-0 lg:space-x-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-end space-y-3 sm:space-y-0 sm:space-x-4 flex-1">

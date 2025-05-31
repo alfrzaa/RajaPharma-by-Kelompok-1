@@ -14,13 +14,13 @@ function App() {
   // return <Dashboard />
   // return <DashboardKasir/>
   // return <StockManagement />
-  // return <SalesPage />
+  return <SalesPage />
   // return <LandingPage />
   // return <LoginPage />
   // return <ReportAdmin/>
   // return <UserManagement/>
 
-  return <Landing/>
+  // return <Landing/>
   
 }
 
