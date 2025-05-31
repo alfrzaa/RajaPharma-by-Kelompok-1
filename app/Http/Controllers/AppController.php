@@ -31,11 +31,11 @@ class AppController extends Controller
         return Inertia::render('StockManagement-Admin');
     }
 
-    public function sales () {
-        return Inertia::render('Sales-Kasir');
+    public function user_management() {
+        return Inertia::render('UserManagement');
     }
 
-    public function test () {
-        return Inertia::render('test');
+    public function sales () {
+        return Inertia::render('Sales-Kasir');
     }
 }

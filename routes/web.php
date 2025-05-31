@@ -28,6 +28,8 @@ Route::get('/dashboard/admin/report', [AppController::class, 'report_admin'])->n
 // Route untuk halaman stock management admin
 Route::get('/dashboard/admin/stock-management', [AppController::class, 'stock_management'])->name('stock_management');
 
+Route::get('/dashboard/admin/user-management', [AppController::class, 'user_management'])->name('user_management');
+
 // Route untuk halaman tes
 Route::get('/test', [AppController::class, 'test'])->name('test');
 
@@ -40,3 +42,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/kasir/dashboard', [KasirController::class, 'index']);
 });
+// Route untuk logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+

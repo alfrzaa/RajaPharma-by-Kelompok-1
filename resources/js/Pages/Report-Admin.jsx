@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Sidebar from "../components/Sidebar"; // Impor Sidebar
 import {
     Menu,
     Package,
@@ -214,90 +215,12 @@ const ReportAdmin = () => {
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            <div
-                className={`bg-[#1A6291] text-white ${
-                    sidebarOpen ? "w-64" : "w-20"
-                } transition-all duration-300 ease-in-out flex flex-col`}
-            >
-                <div className="p-5 flex justify-between items-center">
-                    {sidebarOpen && (
-                        <span className="font-bold text-xl">RajaPharma</span>
-                    )}
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="p-1 rounded-md hover:bg-[#134b73]"
-                    >
-                        <Menu size={24} />
-                    </button>
-                </div>
-
-                <div className="mt-8 flex-1">
-                    <div
-                        className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${
-                            activeMenu === "dashboard"
-                                ? "bg-[#134b73] border-r-4 border-white"
-                                : ""
-                        }`}
-                        onClick={() => Inertia.get(route("dashboard_admin"))}
-                    >
-                        <div className="w-8 flex justify-center">
-                            <Home size={20} />
-                        </div>
-                        {sidebarOpen && <span className="ml-3">Dashboard</span>}
-                    </div>
-
-                    <div
-                        className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${
-                            activeMenu === "stock"
-                                ? "bg-[#134b73] border-r-4 border-white"
-                                : ""
-                        }`}
-                        onClick={() => setActiveMenu("stock")}
-                    >
-                        <div className="w-8 flex justify-center">
-                            <Package size={20} />
-                        </div>
-                        {sidebarOpen && <span className="ml-3">Stok Obat</span>}
-                    </div>
-
-                    <div
-                        className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${
-                            activeMenu === "reports"
-                                ? "bg-[#134b73] border-r-4 border-white"
-                                : ""
-                        }`}
-                        onClick={() => setActiveMenu("reports")}
-                    >
-                        <div className="w-8 flex justify-center">
-                            <FileText size={20} />
-                        </div>
-                        {sidebarOpen && <span className="ml-3">Laporan</span>}
-                    </div>
-
-                    <div
-                        className={`px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer ${
-                            activeMenu === "users"
-                                ? "bg-[#134b73] border-r-4 border-white"
-                                : ""
-                        }`}
-                        onClick={() => setActiveMenu("users")}
-                    >
-                        <div className="w-8 flex justify-center">
-                            <Users size={20} />
-                        </div>
-                        {sidebarOpen && <span className="ml-3">Pengguna</span>}
-                    </div>
-                </div>
-
-                <div className="mt-auto mb-4">
-                    <div className="px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer">
-                        <div className="w-8 flex justify-center">
-                            <LogOut size={20} />
-                        </div>
-                        {sidebarOpen && <span className="ml-3">Keluar</span>}
-                    </div>
-                </div>
-            </div>
+            <Sidebar
+                sidebarOpen={sidebarOpen}
+                setSidebarOpen={setSidebarOpen}
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+            />
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">

@@ -2,6 +2,7 @@ import React from "react";
 import logo from "../assets/logo1.png";
 import medicine from "../assets/medicine1.png";
 import { Inertia } from "@inertiajs/inertia";
+
 // Logo component
 const Logo = () => <img src={logo} alt="RajaPharma Logo" className="h-30" />;
 
@@ -16,24 +17,26 @@ const LandingPage = ({ onNavigateToLogin }) => {
                         <Logo />
                     </div>
 
-                    <h1 className="text-5xl font-bold text-[#1A6291] mb-6 ml-8">
-                        RAJAPHARMA
-                    </h1>
+                    <div>
+                        <h1 className="text-5xl font-bold text-[#1A6291] ml-8">
+                            RAJAPHARMA
+                        </h1>
 
-                    <p className="text-lg text-gray-800 mb-8 ml-8">
-                        Ayo beralih ke Rajapharma dan jadikan
-                        <br />
-                        manajemen apotik Anda lebih gesit! 🚀
-                    </p>
+                        <p className="text-lg text-gray-800 ml-8 mb-4">
+                            Ayo beralih ke Rajapharma dan jadikan
+                            <br />
+                            manajemen apotik Anda lebih gesit! 🚀
+                        </p>
 
-                    <button
-                        onClick={() => {
-                            Inertia.get(route("login"));
-                        }}
-                        className="bg-[#1A6291] text-white font-medium py-3 px-10 rounded-md shadow-md hover:bg-[#134b73] transition w-32 ml-8"
-                    >
-                        Login
-                    </button>
+                        <button
+                            onClick={() => {
+                                Inertia.get(route("login"));
+                            }}
+                            className="bg-[#1A6291] text-white font-medium py-3 px-10 rounded-md shadow-md hover:bg-[#134b73] transition w-32 ml-8"
+                        >
+                            Login
+                        </button>
+                    </div>
                 </div>
 
                 {/* Right content with decorative image */}
