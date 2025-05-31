@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Obat;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Carbon;
 class MedicationController extends Controller
 {
     // Menampilkan semua data obat dan kirim ke React via Inertia
@@ -87,4 +87,50 @@ public function destroy($id)
 
     return redirect()->route('stock_management')->with('success', 'Obat berhasil dihapus');
 }
+
+
+public function dashboard()
+{
+    $lowStockItems = Obat::whereColumn('stok', '<', 'stok_minimum')
+        ->select('id', 'nama_obat', 'stok', 'stok_minimum')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->nama_obat,
+                'stock' => $item->stok,
+                'minStock' => $item->stok_minimum,
+            ];
+        });
+
+    $expiringItems = Obat::where('tanggal_kedaluwarsa', '<=', now()->addDays(60))
+        ->select('id', 'nama_obat', 'tanggal_kedaluwarsa')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->nama_obat,
+                'expiry' => \Carbon\Carbon::parse($item->tanggal_kedaluwarsa)->translatedFormat('d F Y'),
+                'remainingDays' => \Carbon\Carbon::parse($item->tanggal_kedaluwarsa)->diffInDays(now()),
+            ];
+        });
+
+    return Inertia::render('Dashboard-Admin', [
+        'lowStockItems' => $lowStockItems,
+        'expiringItems' => $expiringItems,
+    ]);
+}
+public function restock(Request $request, $id)
+{
+    $validated = $request->validate([
+        'amount' => 'required|integer|min:1',
+    ]);
+
+    $obat = Obat::findOrFail($id);
+    $obat->stok += $validated['amount'];
+    $obat->save();
+
+    return redirect()->route('dashboard_admin')->with('success', 'Stok berhasil diperbarui.');
+}
+
 }

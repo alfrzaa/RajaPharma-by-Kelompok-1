@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
-
+import { Inertia } from "@inertiajs/inertia";
+// import route from "ziggy-js";
 import {
     Menu,
     Package,
@@ -20,105 +21,7 @@ import {
     TrendingUp,
 } from "lucide-react";
 
-// Mock data - expanded
-const lowStockItems = [
-    { id: 1, name: "Amoxicillin 500mg", stock: 15, minStock: 20 },
-    { id: 2, name: "Paracetamol 500mg", stock: 12, minStock: 25 },
-    { id: 3, name: "Cetirizine 10mg", stock: 8, minStock: 15 },
-    { id: 4, name: "Ibuprofen 400mg", stock: 18, minStock: 30 },
-    { id: 5, name: "Omeprazole 20mg", stock: 5, minStock: 20 },
-    { id: 6, name: "Metformin 500mg", stock: 22, minStock: 40 },
-    { id: 7, name: "Amlodipine 5mg", stock: 14, minStock: 25 },
-    { id: 8, name: "Simvastatin 20mg", stock: 9, minStock: 15 },
-    { id: 9, name: "Losartan 50mg", stock: 11, minStock: 20 },
-    { id: 10, name: "Captopril 25mg", stock: 7, minStock: 18 },
-    { id: 11, name: "Aspirin 100mg", stock: 16, minStock: 35 },
-    { id: 12, name: "Furosemide 40mg", stock: 6, minStock: 12 },
-];
-
-const expiringItems = [
-    {
-        id: 1,
-        name: "Vitamin C 500mg",
-        expiry: "15 Mei 2025",
-        remainingDays: 16,
-    },
-    {
-        id: 2,
-        name: "Ibuprofen 400mg",
-        expiry: "30 Mei 2025",
-        remainingDays: 31,
-    },
-    {
-        id: 3,
-        name: "Ambroxol Sirup",
-        expiry: "10 Juni 2025",
-        remainingDays: 42,
-    },
-    {
-        id: 4,
-        name: "Parasetamol Sirup",
-        expiry: "25 Mei 2025",
-        remainingDays: 26,
-    },
-    {
-        id: 5,
-        name: "Cetirizine 10mg",
-        expiry: "5 Juni 2025",
-        remainingDays: 37,
-    },
-    {
-        id: 6,
-        name: "Omeprazole 20mg",
-        expiry: "20 Juni 2025",
-        remainingDays: 52,
-    },
-    {
-        id: 7,
-        name: "Antasida Tablet",
-        expiry: "12 Mei 2025",
-        remainingDays: 13,
-    },
-    { id: 8, name: "Betadine 15ml", expiry: "28 Mei 2025", remainingDays: 29 },
-    {
-        id: 9,
-        name: "Salbutamol Inhaler",
-        expiry: "8 Juni 2025",
-        remainingDays: 40,
-    },
-    {
-        id: 10,
-        name: "Diclofenac Gel",
-        expiry: "15 Juni 2025",
-        remainingDays: 47,
-    },
-    {
-        id: 11,
-        name: "Loratadine 10mg",
-        expiry: "3 Juni 2025",
-        remainingDays: 35,
-    },
-    {
-        id: 12,
-        name: "Dextromethorphan Sirup",
-        expiry: "22 Mei 2025",
-        remainingDays: 23,
-    },
-    {
-        id: 13,
-        name: "Chlorpheniramine 4mg",
-        expiry: "18 Juni 2025",
-        remainingDays: 50,
-    },
-    {
-        id: 14,
-        name: "Ranitidine 150mg",
-        expiry: "7 Mei 2025",
-        remainingDays: 8,
-    },
-];
-
-const Dashboard = () => {
+const Dashboard = ({ lowStockItems, expiringItems }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("dashboard");
     const [stockItems, setStockItems] = useState(lowStockItems);
@@ -127,35 +30,35 @@ const Dashboard = () => {
         item: null,
     });
     const [restockAmount, setRestockAmount] = useState("");
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    // Function to handle restock - this will be connected to stock management
     const handleRestock = (item) => {
         setRestockModal({ open: true, item });
         setRestockAmount("");
     };
 
     const confirmRestock = () => {
-        if (restockModal.item && restockAmount) {
-            const updatedItems = stockItems.map((item) => {
-                if (item.id === restockModal.item.id) {
-                    return {
-                        ...item,
-                        stock: item.stock + parseInt(restockAmount),
-                    };
-                }
-                return item;
-            });
-            setStockItems(updatedItems);
+        if (restockModal.item && restockAmount && !isProcessing) {
+            setIsProcessing(true);
 
-            // Simulate sending data to stock management page
-            console.log("Restock data to be sent to stock management:", {
-                medicationId: restockModal.item.id,
-                amount: parseInt(restockAmount),
-                newStock: restockModal.item.stock + parseInt(restockAmount),
+            Inertia.visit(`/medications/${restockModal.item.id}/restock`, {
+                method: "post",
+                data: {
+                    amount: parseInt(restockAmount),
+                },
+                onSuccess: () => {
+                    setRestockModal({ open: false, item: null });
+                    setRestockAmount("");
+                },
+                onError: (errors) => {
+                    console.error("Restock error:", errors);
+                },
+                onFinish: () => {
+                    setIsProcessing(false);
+                },
+                preserveState: false, // agar reload halaman dan data update
+                preserveScroll: true,
             });
-
-            setRestockModal({ open: false, item: null });
-            setRestockAmount("");
         }
     };
 
@@ -483,11 +386,19 @@ const Dashboard = () => {
                                     onClick={confirmRestock}
                                     disabled={
                                         !restockAmount ||
-                                        parseInt(restockAmount) <= 0
+                                        parseInt(restockAmount) <= 0 ||
+                                        isProcessing
                                     }
-                                    className="flex-1 px-6 py-3 bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white rounded-lg hover:from-[#134b73] hover:to-[#246ba5] transition-all font-medium disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transform hover:scale-105 duration-200 shadow-lg"
+                                    className={`flex-1 px-6 py-3 rounded-lg transition-all font-medium shadow-lg
+    ${
+        isProcessing
+            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+            : "bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white hover:from-[#134b73] hover:to-[#246ba5] hover:scale-105"
+    }`}
                                 >
-                                    Konfirmasi Restok
+                                    {isProcessing
+                                        ? "Memproses..."
+                                        : "Konfirmasi Restok"}
                                 </button>
                             </div>
                         </div>

@@ -4,7 +4,13 @@ use Inertia\Inertia;  // Import Inertia class
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MedicationController;
+use App\Http\Controllers\MedicationController;use 
+App\Http\Controllers\Admin\DashboardController;
+
+Route::middleware(['auth'])->prefix('dashboard/admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::put('/restock/{id}', [DashboardController::class, 'restock'])->name('medications.restock');
+});
 
 // Route untuk menampilkan halaman utama
 Route::get('/', [AppController::class, 'landing'])->name('landing');
@@ -54,3 +60,6 @@ Route::get('/medications', [MedicationController::class, 'index']);
 Route::post('/medications', [MedicationController::class, 'store'])->name('add_medication');
 Route::put('/medications/{id}', [MedicationController::class, 'update'])->name('update_medication');
 Route::delete('/medications/{id}', [MedicationController::class, 'destroy'])->name('delete_medication');
+
+Route::get('/dashboard/admin', [MedicationController::class, 'dashboard'])->name('dashboard_admin');
+Route::post('/medications/{id}/restock', [MedicationController::class, 'restock'])->name('medications.restock');
