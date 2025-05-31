@@ -23,6 +23,9 @@ const allUsers = [
   { id: 2, name: 'Siti Rahma', username: 'siti', role: 'Kasir', lastLogin: '28/04/2025, 09:15' },
   { id: 3, name: 'Joko Prabowo', username: 'joko', role: 'Kasir', lastLogin: '27/04/2025, 17:20' },
 ];
+  
+
+
 
 // Mock data for transactions
 const allTransactions = [
