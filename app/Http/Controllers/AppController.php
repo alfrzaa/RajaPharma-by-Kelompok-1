@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Obat;
 
 class AppController extends Controller
 {
-    public function index() {
+    public function landing() {
         return Inertia::render('LandingPage');
     }
 
@@ -27,9 +28,25 @@ class AppController extends Controller
         return Inertia::render('Report-Admin');
     }
 
-    public function stock_management() {
-        return Inertia::render('StockManagement-Admin');
-    }
+    public function stock_management()
+{
+    $medications = Obat::all()->map(function ($obat) {
+        return [
+            'id' => $obat->id,
+            'name' => $obat->nama_obat,
+            'category' => $obat->kategori,
+            'stock' => $obat->stok,
+            'minStock' => $obat->stok_minimum,
+            'price' => $obat->harga,
+            'expiryDate' => $obat->tanggal_kedaluwarsa,
+            'supplier' => $obat->supplier,
+        ];
+    });
+
+    return Inertia::render('StockManagement', [
+        'medications' => $medications,
+    ]);
+}
 
     public function user_management() {
         return Inertia::render('UserManagement');
@@ -38,4 +55,15 @@ class AppController extends Controller
     public function sales () {
         return Inertia::render('Sales-Kasir');
     }
+    public function index()
+{
+    // Ambil semua data obat dari database
+    $medications = Obat::all(); // Pastikan 'Obat' adalah nama model yang benar
+
+    // Kembalikan halaman StockManagement dengan data obat
+    return Inertia::render('StockManagement', [
+        'medications' => $medications
+    ]);
+}
+
 }

@@ -1,11 +1,13 @@
 <?php
 
+use Inertia\Inertia;  // Import Inertia class
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MedicationController;
 
 // Route untuk menampilkan halaman utama
-Route::get('/', [AppController::class, 'index'])->name('index');
+Route::get('/', [AppController::class, 'landing'])->name('landing');
 
 // Route untuk halaman login (GET)
 Route::get('/login', [AppController::class, 'login'])->name('login');
@@ -28,6 +30,7 @@ Route::get('/dashboard/admin/report', [AppController::class, 'report_admin'])->n
 // Route untuk halaman stock management admin
 Route::get('/dashboard/admin/stock-management', [AppController::class, 'stock_management'])->name('stock_management');
 
+// Route untuk halaman user management admin
 Route::get('/dashboard/admin/user-management', [AppController::class, 'user_management'])->name('user_management');
 
 // Route untuk halaman tes
@@ -42,6 +45,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/kasir/dashboard', [KasirController::class, 'index']);
 });
+
 // Route untuk logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Route untuk medications
+Route::get('/medications', [MedicationController::class, 'index']);
+Route::post('/medications', [MedicationController::class, 'store'])->name('add_medication');
+Route::put('/medications/{id}', [MedicationController::class, 'update'])->name('update_medication');
+Route::delete('/medications/{id}', [MedicationController::class, 'destroy'])->name('delete_medication');
