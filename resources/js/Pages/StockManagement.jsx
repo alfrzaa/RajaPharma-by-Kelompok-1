@@ -90,8 +90,10 @@ const StockManagement = ({ medications }) => {
             [name]: value,
         }));
     };
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const handleSubmit = () => {
+        setIsSubmitting(true);
+
         const medicationData = {
             name: formData.name,
             category:
@@ -105,16 +107,23 @@ const StockManagement = ({ medications }) => {
             supplier: formData.supplier,
         };
 
-        if (currentMedication) {
-            Inertia.put(
-                route("update_medication", currentMedication.id),
-                medicationData
-            );
-        } else {
-            Inertia.post(route("add_medication"), medicationData);
-        }
+        const method = currentMedication ? "put" : "post";
+        const url = currentMedication
+            ? route("update_medication", currentMedication.id)
+            : route("add_medication");
 
-        setShowAddModal(false);
+        Inertia.visit(url, {
+            method,
+            data: medicationData,
+            preserveScroll: true,
+            onSuccess: () => {
+                setShowAddModal(false);
+                setCurrentMedication(null);
+            },
+            onFinish: () => {
+                setIsSubmitting(false);
+            },
+        });
     };
 
     return (
@@ -434,10 +443,17 @@ const StockManagement = ({ medications }) => {
                                 Batal
                             </button>
                             <button
-                                className="px-4 py-2 bg-[#1A6291] text-white rounded-md hover:bg-[#134b73]"
+                                className={`px-4 py-2 rounded-md text-white ${
+                                    isSubmitting
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-[#1A6291] hover:bg-[#134b73]"
+                                }`}
+                                disabled={isSubmitting}
                                 onClick={handleSubmit}
                             >
-                                {currentMedication
+                                {isSubmitting
+                                    ? "Menyimpan..."
+                                    : currentMedication
                                     ? "Simpan Perubahan"
                                     : "Tambah Obat"}
                             </button>
