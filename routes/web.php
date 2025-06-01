@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CashierDashboardController;
 
 Route::middleware(['auth'])->prefix('dashboard/admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -23,7 +24,7 @@ Route::get('/login', [AppController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 // Route untuk halaman dashboard kasir
-Route::get('/dashboard/kasir', [AppController::class, 'dashboard_kasir'])->name('dashboard_kasir');
+Route::get('/dashboard/kasir', [CashierDashboardController::class, 'dashboard'])->name('dashboard_kasir');
 
 // Route untuk halaman sales kasir
 Route::get('/dashboard/kasir/sales', [AppController::class, 'sales'])->name('sales');
@@ -75,3 +76,6 @@ Route::prefix('dashboard/admin')->group(function () {
     Route::put('/user-management/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/user-management/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+
+Route::get('stok-obat', [CashierDashboardController::class, 'getLowStockItems']);
+Route::get('obat-kedaluwarsa', [CashierDashboardController::class, 'getExpiringItems']);
