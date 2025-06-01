@@ -14,15 +14,19 @@ class AuthController extends Controller
 
         // Cek apakah kredensial valid
         if (Auth::attempt($credentials)) {
-            // Login berhasil, ambil data user
             $user = Auth::user();
-            
-            // Kembalikan respons sukses dengan data user
+        
+            // Update kolom last_login
+            $user->update([
+                'last_login' => now()
+            ]);
+        
             return response()->json([
                 'status' => 'success',
                 'user' => $user
             ]);
         }
+        
 
         // Login gagal, kembalikan pesan error
         return response()->json([

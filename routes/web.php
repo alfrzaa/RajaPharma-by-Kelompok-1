@@ -4,8 +4,9 @@ use Inertia\Inertia;  // Import Inertia class
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MedicationController;use 
-App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\MedicationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\UserController;
 
 Route::middleware(['auth'])->prefix('dashboard/admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -63,3 +64,11 @@ Route::delete('/medications/{id}', [MedicationController::class, 'destroy'])->na
 
 Route::get('/dashboard/admin', [MedicationController::class, 'dashboard'])->name('dashboard_admin');
 Route::post('/medications/{id}/restock', [MedicationController::class, 'restock'])->name('medications.restock');
+
+
+Route::prefix('dashboard/admin')->group(function () {
+    Route::get('/user-management', [UserController::class, 'index'])->name('users.index');
+    Route::post('/user-management', [UserController::class, 'store'])->name('users.store');
+    Route::put('/user-management/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/user-management/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+});

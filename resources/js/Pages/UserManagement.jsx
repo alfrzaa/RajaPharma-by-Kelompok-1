@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
+import { Inertia } from "@inertiajs/inertia";
 import {
     Menu,
     Search,
@@ -14,36 +15,13 @@ import {
     FileText,
 } from "lucide-react";
 
-// Mock data for users
-const allUsers = [
-    {
-        id: 1,
-        name: "Admin Utama",
-        username: "admin",
-        role: "Admin",
-        lastLogin: "28/04/2025, 09:45",
-    },
-    {
-        id: 2,
-        name: "Siti Rahma",
-        username: "siti",
-        role: "Kasir",
-        lastLogin: "28/04/2025, 09:15",
-    },
-    {
-        id: 3,
-        name: "Joko Prabowo",
-        username: "joko",
-        role: "Kasir",
-        lastLogin: "27/04/2025, 17:20",
-    },
-];
+const UserManagement = ({ users = [] }) => {
+    const [filteredUsers, setFilteredUsers] = useState(users);
+    const [loading, setLoading] = useState(false);
 
-const UserManagement = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("users");
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredUsers, setFilteredUsers] = useState(allUsers);
     const [showUserModal, setShowUserModal] = useState(false);
     const [userForm, setUserForm] = useState({
         id: null,
@@ -55,7 +33,8 @@ const UserManagement = () => {
 
     // Filter users based on search term
     useEffect(() => {
-        const filtered = allUsers.filter((user) => {
+        // setiap kali users berubah (misal setelah reload), reset hasil filter
+        const filtered = users.filter((user) => {
             return (
                 user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 user.username
@@ -65,7 +44,7 @@ const UserManagement = () => {
             );
         });
         setFilteredUsers(filtered);
-    }, [searchTerm]);
+    }, [users, searchTerm]);
 
     // Handle user form change
     const handleUserFormChange = (e) => {
@@ -80,29 +59,37 @@ const UserManagement = () => {
             !userForm.username ||
             (!userForm.id && !userForm.password)
         ) {
-            alert("Silakan lengkapi semua field yang diperlukan");
+            alert("Silakan lengkapi semua field");
             return;
         }
 
-        if (userForm.id) {
-            // Update existing user
-            console.log("Updating user:", userForm);
-            alert("Pengguna berhasil diperbarui");
-        } else {
-            // Add new user
-            const newUser = {
-                id: allUsers.length + 1,
-                name: userForm.name,
-                username: userForm.username,
-                role: userForm.role,
-                lastLogin: "-",
-            };
-            console.log("Adding user:", newUser);
-            alert("Pengguna baru berhasil ditambahkan");
+        const dataToSend = {
+            name: userForm.name,
+            username: userForm.username,
+            role: userForm.role,
+        };
+
+        if (!userForm.id || userForm.password !== "") {
+            dataToSend.password = userForm.password;
         }
 
-        resetUserForm();
-        setShowUserModal(false);
+        if (userForm.id) {
+            Inertia.put(route("users.update", userForm.id), dataToSend, {
+                onSuccess: () => {
+                    setShowUserModal(false);
+                    Inertia.reload(); // ⬅ reload semua props dari server
+                },
+            });
+        } else {
+            Inertia.post(route("users.store"), dataToSend, {
+                onStart: () => setLoading(true),
+                onSuccess: () => {
+                    setShowUserModal(false);
+                    Inertia.reload({ only: ["users"] }); // Hanya ambil ulang data users
+                },
+                onFinish: () => setLoading(false),
+            });
+        }
     };
 
     // Edit user
@@ -119,9 +106,8 @@ const UserManagement = () => {
 
     // Delete user
     const deleteUser = (userId) => {
-        if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-            console.log("Deleting user:", userId);
-            alert("Pengguna berhasil dihapus");
+        if (confirm("Yakin ingin menghapus pengguna ini?")) {
+            Inertia.delete(route("users.destroy", userId));
         }
     };
 
@@ -210,8 +196,9 @@ const UserManagement = () => {
                                     <button
                                         className="px-6 py-3 bg-[#1A6291] text-white rounded-lg hover:bg-[#134b73] flex items-center justify-center font-medium transition-colors shadow-md"
                                         onClick={() => {
-                                            resetUserForm();
-                                            setShowUserModal(true);
+                                            setSearchTerm(""); // ⬅️ Reset pencarian dulu
+                                            resetUserForm(); // ⬅️ Bersihkan form
+                                            setShowUserModal(true); // ⬅️ Baru tampilkan modal// ⬅️ Tampilkan modal
                                         }}
                                     >
                                         <Plus size={20} className="mr-2" />
@@ -290,18 +277,24 @@ const UserManagement = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className="text-gray-600">
-                                                    {user.lastLogin}
+                                                    {user.lastLogin
+                                                        ? new Date(
+                                                              user.lastLogin
+                                                          ).toLocaleString(
+                                                              "id-ID"
+                                                          )
+                                                        : "-"}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span
                                                     className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                                                        user.lastLogin !== "-"
+                                                        user.lastLogin
                                                             ? "bg-green-100 text-green-800 border border-green-200"
                                                             : "bg-yellow-100 text-yellow-800 border border-yellow-200"
                                                     }`}
                                                 >
-                                                    {user.lastLogin !== "-"
+                                                    {user.lastLogin
                                                         ? "Aktif"
                                                         : "Belum Login"}
                                                 </span>

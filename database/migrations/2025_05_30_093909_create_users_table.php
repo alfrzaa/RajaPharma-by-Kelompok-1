@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();  // Kolom untuk email (opsional)
             $table->string('password');  // Kolom untuk password
             $table->string('role');  // Kolom untuk role pengguna (misalnya: admin, kasir)
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();  // Kolom untuk menyimpan token "remember me"
             $table->timestamps();  // Kolom created_at dan updated_at
         });
