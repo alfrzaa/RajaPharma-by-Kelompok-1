@@ -30,6 +30,10 @@ const UserManagement = ({ users = [] }) => {
         password: "",
         role: "Kasir",
     });
+    useEffect(() => {
+        console.log("searchTerm berubah menjadi:", searchTerm);
+    }, [searchTerm]);
+      
 
     // Filter users based on search term
     useEffect(() => {

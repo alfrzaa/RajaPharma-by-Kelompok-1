@@ -1,7 +1,23 @@
 import React from "react";
 import { Menu, Home, Package, FileText, Users, LogOut } from "lucide-react";
 import { InertiaLink } from "@inertiajs/inertia-react"; // Impor InertiaLink
+import { Inertia } from "@inertiajs/inertia";
+import axios from "axios";
 
+const handleLogout = async () => {
+    try {
+        // Make a POST request to the logout route
+        const response = await axios.post("/logout");
+
+        // If the response is successful, redirect the user to the login page
+        if (response.data.message === "Successfully logged out") {
+            Inertia.get(route("login")); // Redirect to the login page
+        }
+    } catch (error) {
+        console.error("Logout failed", error);
+        // Handle any errors
+    }
+};
 const Sidebar = ({
     sidebarOpen,
     setSidebarOpen,
@@ -97,7 +113,8 @@ const Sidebar = ({
             {/* Footer Menu (Logout) */}
             <div className="mt-auto mb-4">
                 <InertiaLink
-                    href="/logout" // Rute logout sesuai dengan Laravel
+                    href="#"
+                    onClick={handleLogout}
                     className="px-4 py-3 flex items-center text-white font-medium hover:bg-[#134b73] cursor-pointer"
                 >
                     <div className="w-8 flex justify-center">

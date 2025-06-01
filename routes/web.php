@@ -53,8 +53,11 @@ Route::middleware(['auth', 'role:kasir'])->group(function () {
     Route::get('/kasir/dashboard', [KasirController::class, 'index']);
 });
 
-// Route untuk logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', function () {
+    Auth::logout(); // Log the user out
+    return response()->json(['message' => 'Successfully logged out']);
+});
+
 
 // Route untuk medications
 Route::get('/medications', [MedicationController::class, 'index']);
