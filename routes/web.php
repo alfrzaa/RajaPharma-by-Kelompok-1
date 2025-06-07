@@ -8,6 +8,9 @@ use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CashierDashboardController;
+use App\Http\Controllers\TransactionController;
+
+use App\Http\Controllers\ProductController;
 
 Route::middleware(['auth'])->prefix('dashboard/admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -79,3 +82,20 @@ Route::prefix('dashboard/admin')->group(function () {
 
 Route::get('stok-obat', [CashierDashboardController::class, 'getLowStockItems']);
 Route::get('obat-kedaluwarsa', [CashierDashboardController::class, 'getExpiringItems']);
+
+// Route::post('/transactions', [TransactionController::class, 'store']);
+// Route::get('/transactions', [TransactionController::class, 'store']);
+
+// // Route::get('/dashboard/kasir/sales', [TransactionController::class, 'index'])->name('dashboard.kasir.sales');
+// // Route::post('/dashboard/kasir/sales/store', [TransactionController::class, 'store'])->name('store_medication');
+// // Route::put('/dashboard/kasir/sales/update/{id}', [TransactionController::class, 'update'])->name('update_medication');
+// // Route::delete('/dashboard/kasir/sales/delete/{id}', [TransactionController::class, 'destroy'])->name('delete_medication');
+// // Route::post('/transactions', [TransactionController::class, 'store']); // POST request to store a transaction
+// // Route::get('/transactions', [TransactionController::class, 'index']); // GET request to fetch all transactions
+// // routes/web.php
+
+Route::get('/dashboard/kasir/sales', [TransactionController::class, 'index']);
+Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store']);
+Route::get('/dashboard/kasir/sales', [TransactionController::class, 'index'])->name('transactions.index');
+Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store'])->name('transactions.store');
+Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store']);

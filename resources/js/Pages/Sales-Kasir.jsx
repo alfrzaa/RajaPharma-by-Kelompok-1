@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Inertia } from "@inertiajs/inertia";
+import Sidebar from "../components/Sidebar"; // Impor Sidebar
+
 import {
     Menu,
     Search,
@@ -13,101 +16,19 @@ import {
     X,
     Printer,
     CreditCard,
-    Home,
+    Filter,
+    Calendar,
+    Download,
+    Eye,
+    Edit,
+    Trash,
 } from "lucide-react";
-import Sidebar from "../components/Sidebar"; // Impor Sidebar
+import { usePage } from "@inertiajs/inertia-react";
+// Mapping field dari backend Laravel ke field yang dipakai di frontend
 
-// Mock data for medications
-const allProducts = [
-    {
-        id: 1,
-        name: "Paracetamol 500mg",
-        category: "Analgesik",
-        price: 15000,
-        stock: 120,
-    },
-    {
-        id: 2,
-        name: "Amoxicillin 500mg",
-        category: "Antibiotik",
-        price: 20000,
-        stock: 15,
-    },
-    {
-        id: 3,
-        name: "Cetirizine 10mg",
-        category: "Antihistamin",
-        price: 15000,
-        stock: 8,
-    },
-    {
-        id: 4,
-        name: "Vitamin C 500mg",
-        category: "Vitamin",
-        price: 20000,
-        stock: 200,
-    },
-    {
-        id: 5,
-        name: "Ibuprofen 400mg",
-        category: "Analgesik",
-        price: 12000,
-        stock: 85,
-    },
-    {
-        id: 6,
-        name: "Ambroxol Sirup",
-        category: "Batuk & Flu",
-        price: 25000,
-        stock: 45,
-    },
-    {
-        id: 7,
-        name: "Metformin 500mg",
-        category: "Antidiabetes",
-        price: 18000,
-        stock: 60,
-    },
-    {
-        id: 8,
-        name: "Amlodipine 10mg",
-        category: "Antihipertensi",
-        price: 22000,
-        stock: 75,
-    },
-    {
-        id: 9,
-        name: "Promag Tablet",
-        category: "Saluran Cerna",
-        price: 8000,
-        stock: 110,
-    },
-    {
-        id: 10,
-        name: "Antasida Sirup",
-        category: "Saluran Cerna",
-        price: 18000,
-        stock: 40,
-    },
-    {
-        id: 11,
-        name: "Salbutamol Inhaler",
-        category: "Pernapasan",
-        price: 65000,
-        stock: 25,
-    },
-    {
-        id: 12,
-        name: "Betadine Solution",
-        category: "Antiseptik",
-        price: 28000,
-        stock: 30,
-    },
-];
-
-const categories = [...new Set(allProducts.map((product) => product.category))];
-
-const SalesPage = () => {
+const SalesPage = ({ products = [] }) => {
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [mappedProducts, setMappedProducts] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("penjualan");
     const [searchTerm, setSearchTerm] = useState("");
@@ -115,7 +36,6 @@ const SalesPage = () => {
     const [cart, setCart] = useState([]);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [cashAmount, setCashAmount] = useState("");
-    const [filteredProducts, setFilteredProducts] = useState(allProducts);
     const [showSummary, setShowSummary] = useState(false);
     const [transactionComplete, setTransactionComplete] = useState(false);
     const [receipt, setReceipt] = useState({
@@ -127,19 +47,47 @@ const SalesPage = () => {
         cash: 0,
         change: 0,
     });
-
-    // Filter products based on search term and category
+    console.log("Data produk dari Laravel (Inertia):", products);
+    const { props } = usePage();
     useEffect(() => {
-        const filtered = allProducts.filter((product) => {
+        if (props.receipt) {
+            setReceipt(props.receipt);
+            setShowSummary(true);
+            setTransactionComplete(true);
+        }
+    }, [props.receipt]);
+
+    useEffect(() => {
+        // Mapping ulang saat products berubah
+        const mapped = products.map((p) => ({
+            id: p.id,
+            name: p.nama_obat,
+            category: p.kategori,
+            stock: p.stok,
+            price: p.harga ?? 0,
+        }));
+        setMappedProducts(mapped);
+    }, [products]);
+
+    // Filter berdasarkan pencarian dan kategori
+    useEffect(() => {
+        const filtered = mappedProducts.filter((product) => {
+            const name = product.name || "";
+            const category = product.category || "";
             return (
-                product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (filterCategory === "" || product.category === filterCategory)
+                name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+                (filterCategory === "" || category === filterCategory)
             );
         });
         setFilteredProducts(filtered);
-    }, [searchTerm, filterCategory]);
+    }, [searchTerm, filterCategory, mappedProducts]);
 
-    // Calculate cart totals
+    // Mendefinisikan kategori produk
+    const categories = filteredProducts.length
+        ? [...new Set(filteredProducts.map((product) => product.category))]
+        : [];
+
+    // Total subtotal dan total dari keranjang belanja
     const subtotal = cart.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
@@ -147,7 +95,7 @@ const SalesPage = () => {
     const tax = 0;
     const total = subtotal + tax;
 
-    // Add product to cart
+    // Tambah produk ke keranjang
     const addToCart = (product) => {
         const existingItem = cart.find((item) => item.id === product.id);
 
@@ -163,17 +111,14 @@ const SalesPage = () => {
         }
     };
 
-    // Remove product from cart
+    // Hapus produk dari keranjang
     const removeFromCart = (productId) => {
         setCart(cart.filter((item) => item.id !== productId));
     };
 
-    // Update product quantity in cart
+    // Update kuantitas produk di keranjang
     const updateQuantity = (productId, newQuantity) => {
         if (newQuantity < 1) return;
-
-        const product = allProducts.find((p) => p.id === productId);
-        if (newQuantity > product.stock) return;
 
         const updatedCart = cart.map((item) =>
             item.id === productId ? { ...item, quantity: newQuantity } : item
@@ -181,7 +126,7 @@ const SalesPage = () => {
         setCart(updatedCart);
     };
 
-    // Process payment
+    // Proses pembayaran dan kirim data transaksi ke backend
     const processPayment = () => {
         const cashValue = parseFloat(cashAmount || "0");
 
@@ -191,23 +136,33 @@ const SalesPage = () => {
         }
 
         const newReceipt = {
-            id: `INV-${Date.now().toString().slice(-6)}`,
-            date: new Date().toLocaleString("id-ID"),
-            items: [...cart],
-            subtotal,
-            tax,
+            items: cart.map((item) => ({
+                id: item.id,
+                quantity: item.quantity,
+            })),
             total,
             cash: cashValue,
-            change: cashValue - total,
         };
 
-        setReceipt(newReceipt);
-        setShowPaymentModal(false);
-        setShowSummary(true);
-        setTransactionComplete(true);
+        Inertia.post("/dashboard/kasir/sales", newReceipt, {
+            onSuccess: (page) => {
+                const receiptData = page.props.receipt;
+                if (receiptData) {
+                    setReceipt(receiptData);
+                    setShowSummary(true);
+                    setTransactionComplete(true);
+                    setShowPaymentModal(false);
+                }
+                // 🔒 Tutup modal setelah berhasil
+            },
+            onError: (errors) => {
+                alert("Gagal memproses transaksi");
+                console.error(errors);
+            },
+        });
     };
 
-    // Start new transaction
+    // Memulai transaksi baru
     const startNewTransaction = () => {
         setCart([]);
         setCashAmount("");
@@ -215,21 +170,22 @@ const SalesPage = () => {
         setTransactionComplete(false);
     };
 
-    // Format currency
+    // Format uang
     const formatCurrency = (value) => {
-        return value.toLocaleString("id-ID");
+        const number = Number(value); // konversi ke angka
+        if (isNaN(number)) return "0";
+        return number.toLocaleString("id-ID");
     };
 
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            {/* Sidebar */}
             <Sidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
-                activeMenu={activeMenu}
+                activeMenu={"sales"} // ✅ SESUAI DENGAN KASUS di Sidebar.jsx
                 setActiveMenu={setActiveMenu}
-                role="kasir" // Ini penting!
+                role="kasir"
             />
 
             {/* Main Content */}
@@ -376,7 +332,7 @@ const SalesPage = () => {
                                         <option value="">Semua Kategori</option>
                                         {categories.map((category) => (
                                             <option
-                                                key={category}
+                                                key={`cat-${category}`}
                                                 value={category}
                                             >
                                                 {category}
@@ -391,9 +347,9 @@ const SalesPage = () => {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {filteredProducts.map((product) => (
+                                {filteredProducts.map((product, index) => (
                                     <div
-                                        key={product.id}
+                                        key={`product-${product.id ?? index}`}
                                         className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 min-h-[140px] flex flex-col justify-between"
                                         onClick={() =>
                                             product.stock > 0 &&
@@ -562,94 +518,93 @@ const SalesPage = () => {
                         </div>
                     </div>
                 )}
+            </div>
+            {/* Payment Modal */}
+            {showPaymentModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-gray-800">
+                                Pembayaran
+                            </h2>
+                            <button
+                                className="p-1 rounded-full hover:bg-gray-200"
+                                onClick={() => setShowPaymentModal(false)}
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
 
-                {/* Payment Modal */}
-                {showPaymentModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-                        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-bold text-gray-800">
-                                    Pembayaran
-                                </h2>
-                                <button
-                                    className="p-1 rounded-full hover:bg-gray-200"
-                                    onClick={() => setShowPaymentModal(false)}
-                                >
-                                    <X size={24} />
-                                </button>
+                        <div className="mb-6">
+                            <div className="flex justify-between mb-2">
+                                <span className="text-gray-600">
+                                    Total Pembayaran
+                                </span>
+                                <span className="font-bold text-lg">
+                                    Rp {formatCurrency(total)}
+                                </span>
                             </div>
 
-                            <div className="mb-6">
-                                <div className="flex justify-between mb-2">
-                                    <span className="text-gray-600">
-                                        Total Pembayaran
+                            <div className="mt-4">
+                                <label className="block text-gray-700 mb-2">
+                                    Jumlah Tunai
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                        Rp
                                     </span>
-                                    <span className="font-bold text-lg">
-                                        Rp {formatCurrency(total)}
-                                    </span>
-                                </div>
-
-                                <div className="mt-4">
-                                    <label className="block text-gray-700 mb-2">
-                                        Jumlah Tunai
-                                    </label>
-                                    <div className="relative">
-                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                            Rp
-                                        </span>
-                                        <input
-                                            type="text"
-                                            className="pl-10 pr-4 py-3 border rounded-lg w-full text-lg focus:outline-none focus:ring-2 focus:ring-[#1A6291]"
-                                            value={cashAmount}
-                                            onChange={(e) => {
-                                                const value =
-                                                    e.target.value.replace(
-                                                        /\D/g,
-                                                        ""
-                                                    );
-                                                setCashAmount(value);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-3 gap-2 mt-3">
-                                    {[
-                                        10000, 20000, 50000, 100000, 200000,
-                                        500000,
-                                    ].map((amount) => (
-                                        <button
-                                            key={amount}
-                                            className="py-2 border rounded-lg hover:bg-gray-50 text-xs"
-                                            onClick={() =>
-                                                setCashAmount(amount.toString())
-                                            }
-                                        >
-                                            Rp {formatCurrency(amount)}
-                                        </button>
-                                    ))}
+                                    <input
+                                        type="text"
+                                        className="pl-10 pr-4 py-3 border rounded-lg w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        value={cashAmount}
+                                        onChange={(e) => {
+                                            // Only allow numbers
+                                            const value =
+                                                e.target.value.replace(
+                                                    /\D/g,
+                                                    ""
+                                                );
+                                            setCashAmount(value);
+                                        }}
+                                    />
                                 </div>
                             </div>
 
-                            <div className="flex space-x-3">
-                                <button
-                                    className="flex-1 py-3 bg-gray-200 rounded-lg font-medium hover:bg-gray-300"
-                                    onClick={() => setShowPaymentModal(false)}
-                                >
-                                    Batal
-                                </button>
-                                <button
-                                    className="flex-1 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center justify-center"
-                                    onClick={processPayment}
-                                >
-                                    <CreditCard size={20} className="mr-2" />
-                                    Proses Pembayaran
-                                </button>
+                            <div className="grid grid-cols-3 gap-2 mt-3">
+                                {[
+                                    10000, 20000, 50000, 100000, 200000, 500000,
+                                ].map((amount) => (
+                                    <button
+                                        key={amount}
+                                        className="py-2 border rounded-lg hover:bg-gray-50"
+                                        onClick={() =>
+                                            setCashAmount(amount.toString())
+                                        }
+                                    >
+                                        Rp {formatCurrency(amount)}
+                                    </button>
+                                ))}
                             </div>
                         </div>
+
+                        <div className="flex space-x-3">
+                            <button
+                                className="flex-1 py-3 bg-gray-200 rounded-lg font-medium hover:bg-gray-300"
+                                onClick={() => setShowPaymentModal(false)}
+                            >
+                                Batal
+                            </button>
+                            <button
+                                className="flex-1 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center justify-center"
+                                onClick={processPayment}
+                            >
+                                <CreditCard size={20} className="mr-2" />
+                                Proses Pembayaran
+                            </button>
+                        </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 };
