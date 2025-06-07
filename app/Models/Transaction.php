@@ -9,10 +9,18 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'invoice_number',
-        'total_amount',
-        'cash',
-        'change',
-    ];
+    protected $fillable = ['invoice_number', 'cash','change','total_amount', 'user_id', 'created_at'];
+
+
+  // app/Models/Transaction.php
+public function items()
+{
+    return $this->hasMany(TransactionItem::class);
+}
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
 }

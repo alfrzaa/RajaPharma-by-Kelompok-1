@@ -12,20 +12,20 @@ class TransactionController extends Controller
     public function index()
     {
         return Inertia::render('Sales-Kasir', [
-            'products' => Obat::all(), // ✅ pastikan ini ada
+            'products' => Obat::all(),
         ]);
     }
 
     public function store(Request $request)
     {
-        // Validasi
+        // Validasi input
         $validated = $request->validate([
             'items' => 'required|array',
             'total' => 'required|numeric',
             'cash' => 'required|numeric',
         ]);
 
-        // Simpan transaksi
+        // Simpan transaksi utama
         $transaction = Transaction::create([
             'invoice_number' => 'INV-' . strtoupper(uniqid()),
             'total_amount' => $validated['total'],
@@ -33,7 +33,7 @@ class TransactionController extends Controller
             'change' => $validated['cash'] - $validated['total'],
         ]);
 
-        // Update stok + siapkan data item
+        // Proses item & update stok
         $itemsData = [];
 
         foreach ($validated['items'] as $item) {
@@ -45,22 +45,31 @@ class TransactionController extends Controller
                 ]);
             }
 
+            // Kurangi stok
             $product->stok -= $item['quantity'];
             $product->save();
 
+            // Simpan item ke transaction_items
+            $transaction->items()->create([
+                'product_id' => $product->id,
+                'name' => $product->nama_obat,
+                'kategori' => $product->kategori,
+                'quantity' => $item['quantity'],
+                'price' => $product->harga,
+            ]);
+
+            // Simpan untuk ditampilkan di struk
             $itemsData[] = [
                 'id' => $product->id,
                 'name' => $product->nama_obat,
+                'kategori' => $product->kategori,
                 'price' => $product->harga,
                 'quantity' => $item['quantity'],
             ];
         }
 
-
-        $products = Obat::all();
-
         return Inertia::render('Sales-Kasir', [
-            'products' => $products,
+            'products' => Obat::all(),
             'receipt' => [
                 'id' => $transaction->invoice_number,
                 'date' => now()->format('d/m/Y H:i:s'),

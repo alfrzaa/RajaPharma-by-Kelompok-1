@@ -99,3 +99,15 @@ Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store']);
 Route::get('/dashboard/kasir/sales', [TransactionController::class, 'index'])->name('transactions.index');
 Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store'])->name('transactions.store');
 Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store']);
+
+use App\Http\Controllers\ReportController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard/admin/report', [ReportController::class, 'index'])->name('admin.report');
+});
+
+use App\Http\Controllers\ReportExportController;
+use App\Http\Controllers\ReceiptController;
+Route::get('/admin/report/pdf', [ReportExportController::class, 'download'])->name('report.download');
+Route::get('/admin/report/pdf', [ReportExportController::class, 'download']);
+Route::get('/admin/receipt/{invoice}', [ReceiptController::class, 'download']);

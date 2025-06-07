@@ -14,101 +14,24 @@ import {
     Home,
     CreditCard,
 } from "lucide-react";
+import { usePage } from "@inertiajs/inertia-react";
 
 import { Inertia } from "@inertiajs/inertia";
-// Mock data for transactions
-const allTransactions = [
-    {
-        id: "INV-237856",
-        date: "29/04/2025, 08:15",
-        cashier: "Siti Rahma",
-        items: [
-            { id: 1, name: "Paracetamol 500mg", quantity: 2, price: 15000 },
-            { id: 4, name: "Vitamin C 500mg", quantity: 1, price: 20000 },
-        ],
-        subtotal: 50000,
-        total: 50000,
-    },
-    {
-        id: "INV-237855",
-        date: "29/04/2025, 07:32",
-        cashier: "Siti Rahma",
-        items: [
-            { id: 6, name: "Ambroxol Sirup", quantity: 1, price: 25000 },
-            { id: 3, name: "Cetirizine 10mg", quantity: 1, price: 15000 },
-        ],
-        subtotal: 40000,
-        total: 40000,
-    },
-    {
-        id: "INV-237854",
-        date: "28/04/2025, 16:45",
-        cashier: "Joko Prabowo",
-        items: [
-            { id: 2, name: "Amoxicillin 500mg", quantity: 1, price: 20000 },
-            { id: 9, name: "Promag Tablet", quantity: 2, price: 8000 },
-        ],
-        subtotal: 36000,
-        total: 36000,
-    },
-    {
-        id: "INV-237853",
-        date: "28/04/2025, 14:23",
-        cashier: "Siti Rahma",
-        items: [
-            { id: 11, name: "Salbutamol Inhaler", quantity: 1, price: 65000 },
-        ],
-        subtotal: 65000,
-        total: 65000,
-    },
-    {
-        id: "INV-237852",
-        date: "28/04/2025, 11:08",
-        cashier: "Siti Rahma",
-        items: [
-            { id: 5, name: "Ibuprofen 400mg", quantity: 2, price: 12000 },
-            { id: 10, name: "Antasida Sirup", quantity: 1, price: 18000 },
-        ],
-        subtotal: 42000,
-        total: 42000,
-    },
-    {
-        id: "INV-237851",
-        date: "28/04/2025, 09:47",
-        cashier: "Joko Prabowo",
-        items: [
-            { id: 1, name: "Paracetamol 500mg", quantity: 1, price: 15000 },
-            { id: 4, name: "Vitamin C 500mg", quantity: 3, price: 20000 },
-        ],
-        subtotal: 75000,
-        total: 75000,
-    },
-    {
-        id: "INV-237850",
-        date: "27/04/2025, 16:38",
-        cashier: "Joko Prabowo",
-        items: [
-            { id: 8, name: "Amlodipine 10mg", quantity: 2, price: 22000 },
-            { id: 7, name: "Metformin 500mg", quantity: 1, price: 18000 },
-        ],
-        subtotal: 62000,
-        total: 62000,
-    },
-];
 
 const ReportAdmin = () => {
+    const { transactions = [] } = usePage().props;
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeMenu, setActiveMenu] = useState("reports");
     const [dateRange, setDateRange] = useState({ start: "", end: "" });
     const [filteredTransactions, setFilteredTransactions] =
-        useState(allTransactions);
+        useState(transactions);
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [showTransactionDetail, setShowTransactionDetail] = useState(false);
 
     // Filter transactions based on date range
     useEffect(() => {
         if (!dateRange.start && !dateRange.end) {
-            setFilteredTransactions(allTransactions);
+            setFilteredTransactions(transactions);
             return;
         }
 
@@ -116,31 +39,30 @@ const ReportAdmin = () => {
             ? new Date(dateRange.start)
             : new Date(0);
         const endDate = dateRange.end ? new Date(dateRange.end) : new Date();
-
-        // Set time to end of day for end date
         endDate.setHours(23, 59, 59, 999);
 
-        // Filter transactions
-        const filtered = allTransactions.filter((transaction) => {
+        const filtered = transactions.filter((transaction) => {
             const transactionDate = new Date(
                 transaction.date.split(", ")[0].split("/").reverse().join("-")
             );
             return transactionDate >= startDate && transactionDate <= endDate;
         });
+
         setFilteredTransactions(filtered);
-    }, [dateRange]);
+    }, [dateRange, transactions]);
 
     // Calculate sales summary
     const getSalesSummary = () => {
-        const totalSales = filteredTransactions.reduce(
-            (sum, transaction) => sum + transaction.total,
-            0
-        );
+        const totalSales = filteredTransactions.reduce((sum, transaction) => {
+            const totalValue = parseFloat(transaction.total);
+            return sum + (isNaN(totalValue) ? 0 : totalValue);
+        }, 0);
+
         const totalItems = filteredTransactions.reduce((sum, transaction) => {
             return (
                 sum +
                 transaction.items.reduce(
-                    (itemSum, item) => itemSum + item.quantity,
+                    (itemSum, item) => itemSum + (item.quantity || 0),
                     0
                 )
             );
@@ -161,7 +83,7 @@ const ReportAdmin = () => {
 
     // Print transaction receipt
     const printTransactionReceipt = (transaction) => {
-        alert(`Mencetak struk untuk transaksi ${transaction.id}`);
+        window.open(`/admin/receipt/${transaction.id}`, "_blank");
     };
 
     // Reprint transaction
@@ -171,12 +93,17 @@ const ReportAdmin = () => {
 
     // Format currency
     const formatCurrency = (value) => {
-        return value.toLocaleString("id-ID");
+        const number = Number(value); // konversi ke angka
+        if (isNaN(number)) return "0";
+        return number.toLocaleString("id-ID");
     };
-
-    // Generate PDF (mock function)
+    // Generate PDF
     const generatePDF = () => {
-        alert("Unduh laporan PDF berhasil!");
+        const params = new URLSearchParams();
+        if (dateRange.start) params.append("start", dateRange.start);
+        if (dateRange.end) params.append("end", dateRange.end);
+
+        window.open(`/admin/report/pdf?${params.toString()}`, "_blank");
     };
 
     // Get page title based on active menu
@@ -197,6 +124,8 @@ const ReportAdmin = () => {
 
     // Get category for item
     const getItemCategory = (itemName) => {
+        if (!itemName) return "Tidak diketahui";
+
         if (itemName.includes("Vitamin")) return "Vitamin";
         if (
             itemName.includes("Paracetamol") ||
@@ -209,6 +138,7 @@ const ReportAdmin = () => {
             return "Obat Batuk";
         if (itemName.includes("Amlodipine") || itemName.includes("Metformin"))
             return "Obat Kronis";
+
         return "Obat";
     };
 
