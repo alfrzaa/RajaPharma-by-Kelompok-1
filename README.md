@@ -7,10 +7,11 @@
 ## 👥 Tim Pengembang - Kelompok 1
  
 - Tisa Ameiliawati (F1E122045)  
-- Egydia Alfariza Ramadhani (F1E122144)  
+- Egydia Alfariza Ramadhani (F1E122144)
+- Muhammad Farhan Hadrawi (F1E122149)  
 - Adinda Desiska (F1E122174)  
 - Muhammad Radhiy Pasha (F1E122182)  
-- Muhammad Farhan Hadrawi (F1E122149)
+- 
 
 ---
 
@@ -35,13 +36,16 @@ Proyek ini bertujuan untuk memberikan solusi digital kepada apotek mitra yang ma
 ### ✅ Untuk Kasir
 - Sistem POS: pencarian obat, input transaksi
 - Cetak struk transaksi
-- Lihat riwayat penjualan
+- Dashboard
+
 
 ---
 
 ## 🧱 Teknologi yang Digunakan
 
 - **Frontend**: React.js + Tailwind CSS
+- **Backend**: Laravel
+- **Database**: Mysql
 - **State Management**: React Hooks (`useState`)
 - **Bundler**: Vite.js
 - **Style Utility**: TailwindCSS
