@@ -83,7 +83,7 @@ const ReportAdmin = () => {
 
     // Print transaction receipt
     const printTransactionReceipt = (transaction) => {
-        window.open(`/admin/receipt/${transaction.id}`, "_blank");
+        window.open(`/receipt/${transaction.id}`, "_blank");
     };
 
     // Reprint transaction

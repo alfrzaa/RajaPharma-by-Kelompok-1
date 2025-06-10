@@ -291,7 +291,7 @@ const SalesPage = ({ products = [] }) => {
 
                             <div className="mt-8 flex justify-center space-x-4">
                                 <a
-                                    href={`/admin/receipt/${receipt.id}`}
+                                    href={`/receipt/${receipt.id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="px-4 py-2 bg-[#1A6291] text-white rounded hover:bg-[#134b73] flex items-center"

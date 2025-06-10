@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-// Controllers
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -59,7 +56,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/dashboard/admin/report', [ReportController::class, 'index'])->name('admin.report');
         Route::get('/admin/report/pdf', [ReportExportController::class, 'download'])->name('report.download');
-        Route::get('/admin/receipt/{invoice}', [ReceiptController::class, 'download']);
     });
 
     // ===============================
@@ -72,9 +68,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/kasir/sales', [TransactionController::class, 'index'])->name('transactions.index');
         Route::post('/dashboard/kasir/sales', [TransactionController::class, 'store'])->name('transactions.store');
 
-        Route::get('stok-obat', [CashierDashboardController::class, 'getLowStockItems']);
-        Route::get('obat-kedaluwarsa', [CashierDashboardController::class, 'getExpiringItems']);
+        Route::get('/stok-obat', [CashierDashboardController::class, 'getLowStockItems']);
+        Route::get('/obat-kedaluwarsa', [CashierDashboardController::class, 'getExpiringItems']);
     });
+
+    // ===============================
+    // CETAK STRUK - Dapat Diakses oleh Admin & Kasir
+    // ===============================
+    Route::get('/receipt/{invoice}', [ReceiptController::class, 'download']);
 
     // ===============================
     // Tes route (opsional)
