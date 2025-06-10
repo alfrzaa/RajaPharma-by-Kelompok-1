@@ -1,10 +1,6 @@
 import React from "react";
-import logo from "../assets/logo1.png";
 import medicine from "../assets/medicine1.png";
 import { Inertia } from "@inertiajs/inertia";
-
-// Logo component
-const Logo = () => <img src={logo} alt="RajaPharma Logo" className="h-30" />;
 
 // Landing Page Component
 const LandingPage = ({ onNavigateToLogin }) => {
@@ -14,7 +10,6 @@ const LandingPage = ({ onNavigateToLogin }) => {
                 {/* Left content */}
                 <div className="w-full md:w-1/2 p-12 flex flex-col justify-center">
                     <div className="mb-2">
-                        <Logo />
                     </div>
 
                     <div>
