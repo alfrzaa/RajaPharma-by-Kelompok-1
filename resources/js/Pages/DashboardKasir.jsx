@@ -66,7 +66,7 @@ const DashboardKasir = ({ lowStockItems, expiringItems }) => {
                 setActiveMenu={setActiveMenu}
                 role="kasir" // Ini penting!
             />
-            ;{/* Main Content */}
+            {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
                 <div className="bg-white shadow-sm z-10 border-b border-gray-200">

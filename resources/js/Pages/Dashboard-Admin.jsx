@@ -46,25 +46,26 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
         if (restockModal.item && restockAmount && !isProcessing) {
             setIsProcessing(true);
 
-            Inertia.visit(`/medications/${restockModal.item.id}/restock`, {
-                method: "post",
-                data: {
-                    amount: parseInt(restockAmount),
-                },
+            // toast.success("Stok berhasil diperbarui!");
+            Inertia.post(`/medications/${restockModal.item.id}/restock`, {
+                amount: parseInt(restockAmount),
+                _method: "post",
+            }, {
+                preserveScroll: true,
                 onSuccess: () => {
+                    console.log("sjccess");
+
                     setRestockModal({ open: false, item: null });
                     setRestockAmount("");
-                    toast.success("Stok berhasil diperbarui!");
                 },
-                onError: (errors) => {
+                onError: () => {
                     toast.error("Gagal memperbarui stok.");
                     console.error("Restock error:", errors);
                 },
                 onFinish: () => {
+                    toast.success("Stok berhasil diperbarui!");
                     setIsProcessing(false);
                 },
-                preserveState: false, // reload data dari server
-                preserveScroll: true,
             });
         }
     };
@@ -128,7 +129,13 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                 activeMenu={activeMenu}
                 setActiveMenu={setActiveMenu}
             />
-
+            {/* <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                closeOnClick
+                draggable
+                newestOnTop
+            /> */}
             {/* Main content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Top navigation */}
@@ -495,11 +502,10 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                                         isProcessing
                                     }
                                     className={`flex-1 px-6 py-3 rounded-lg transition-all font-medium shadow-lg
-    ${
-        isProcessing
-            ? "bg-gray-300 cursor-not-allowed text-gray-600"
-            : "bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white hover:from-[#134b73] hover:to-[#246ba5] hover:scale-105"
-    }`}
+    ${isProcessing
+                                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                                            : "bg-gradient-to-r from-[#1A6291] to-[#2B7CB3] text-white hover:from-[#134b73] hover:to-[#246ba5] hover:scale-105"
+                                        }`}
                                 >
                                     {isProcessing
                                         ? "Memproses..."
@@ -510,7 +516,7 @@ const Dashboard = ({ lowStockItems = [], expiringItems = [] }) => {
                     </div>
                 </div>
             )}
-            <ToastContainer position="top-right" autoClose={5000} />
+            {/* <ToastContainer position="top-right" autoClose={5000} /> */}
         </div>
     );
 };

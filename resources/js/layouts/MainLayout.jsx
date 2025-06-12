@@ -16,13 +16,13 @@ const MainLayout = ({ children }) => {
     return (
         <>
             <main>{children}</main>
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={3000}
                 closeOnClick
                 draggable
                 newestOnTop
-            />
+            /> */}
         </>
     );
 };

@@ -40,6 +40,8 @@ const SalesPage = ({ products = [] }) => {
     const [cashAmount, setCashAmount] = useState("");
     const [showSummary, setShowSummary] = useState(false);
     const [transactionComplete, setTransactionComplete] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const [receipt, setReceipt] = useState({
         id: "",
         date: "",
@@ -102,14 +104,25 @@ const SalesPage = ({ products = [] }) => {
         const existingItem = cart.find((item) => item.id === product.id);
 
         if (existingItem) {
-            const updatedCart = cart.map((item) =>
-                item.id === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            );
-            setCart(updatedCart);
+            // Mengecek apakah stok mencukupi untuk penambahan produk ke keranjang
+            if (existingItem.quantity < product.stock) {
+                const updatedCart = cart.map((item) =>
+                    item.id === product.id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                );
+                setCart(updatedCart);
+            } else {
+                // Jika sudah mencapai stok maksimum, beri notifikasi atau tidak tambah
+                toast.warning("Stok tidak mencukupi");
+            }
         } else {
-            setCart([...cart, { ...product, quantity: 1 }]);
+            // Mengecek jika stok mencukupi untuk produk pertama kali ditambahkan
+            if (product.stock > 0) {
+                setCart([...cart, { ...product, quantity: 1 }]);
+            } else {
+                toast.warning("Stok tidak mencukupi");
+            }
         }
     };
 
@@ -120,12 +133,21 @@ const SalesPage = ({ products = [] }) => {
 
     // Update kuantitas produk di keranjang
     const updateQuantity = (productId, newQuantity) => {
-        if (newQuantity < 1) return;
+        const product = cart.find((item) => item.id === productId);
 
-        const updatedCart = cart.map((item) =>
-            item.id === productId ? { ...item, quantity: newQuantity } : item
-        );
-        setCart(updatedCart);
+        // Ensure the new quantity doesn't exceed stock or is negative
+        if (newQuantity <= product.stock && newQuantity >= 1) {
+            const updatedCart = cart.map((item) =>
+                item.id === productId
+                    ? { ...item, quantity: newQuantity }
+                    : item
+            );
+            setCart(updatedCart);
+        } else if (newQuantity > product.stock) {
+            toast.warning("Jumlah yang diminta melebihi stok.");
+        } else if (newQuantity < 1) {
+            toast.warning("Jumlah tidak bisa kurang dari 1.");
+        }
     };
 
     // Proses pembayaran dan kirim data transaksi ke backend
@@ -137,14 +159,22 @@ const SalesPage = ({ products = [] }) => {
             return;
         }
 
+        setIsLoading(true); // Start loading
+
         const newReceipt = {
             items: cart.map((item) => ({
                 id: item.id,
                 quantity: item.quantity,
+                price: item.price,
             })),
             total,
             cash: cashValue,
+            change: cashValue - total,
+            date: new Date().toLocaleString(),
         };
+
+        // Save receipt to localStorage
+        localStorage.setItem("transactionData", JSON.stringify(newReceipt));
 
         Inertia.post("/dashboard/kasir/sales", newReceipt, {
             onSuccess: (page) => {
@@ -155,14 +185,25 @@ const SalesPage = ({ products = [] }) => {
                     setTransactionComplete(true);
                     setShowPaymentModal(false);
                     toast.success("Transaksi berhasil diproses!");
+                    setIsLoading(false); // End loading
                 }
             },
             onError: (errors) => {
                 toast.error("Gagal memproses transaksi.");
                 console.error(errors);
+                setIsLoading(false); // End loading
             },
         });
     };
+    useEffect(() => {
+        const savedTransaction = localStorage.getItem("transactionData");
+        if (savedTransaction) {
+            const transactionData = JSON.parse(savedTransaction);
+            setReceipt(transactionData);
+            setShowSummary(true);
+            setTransactionComplete(true);
+        }
+    }, []);
 
     // Memulai transaksi baru
     const startNewTransaction = () => {
@@ -170,6 +211,9 @@ const SalesPage = ({ products = [] }) => {
         setCashAmount("");
         setShowSummary(false);
         setTransactionComplete(false);
+
+        // Clear the saved transaction data from localStorage
+        localStorage.removeItem("transactionData");
     };
 
     // Format uang
@@ -189,8 +233,6 @@ const SalesPage = ({ products = [] }) => {
                 setActiveMenu={setActiveMenu}
                 role="kasir"
             />
-            <ToastContainer position="top-right" autoClose={3000} />
-
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
@@ -464,9 +506,37 @@ const SalesPage = ({ products = [] }) => {
                                                         <Minus size={16} />
                                                     </button>
 
-                                                    <span className="w-8 text-center">
-                                                        {item.quantity}
-                                                    </span>
+                                                    {/* Editable quantity */}
+                                                    <input
+                                                        type="text"
+                                                        value={item.quantity}
+                                                        onChange={(e) => {
+                                                            // Allow the user to type in any number or clear the input
+                                                            const newQuantity =
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                    10
+                                                                );
+                                                            if (
+                                                                !isNaN(
+                                                                    newQuantity
+                                                                ) &&
+                                                                newQuantity >= 0
+                                                            ) {
+                                                                updateQuantity(
+                                                                    item.id,
+                                                                    newQuantity
+                                                                );
+                                                            }
+                                                        }}
+                                                        onFocus={(e) =>
+                                                            e.target.select()
+                                                        } // Optional: Select the text when input is focused
+                                                        className="w-10 text-center border rounded-md"
+                                                        min="0"
+                                                        max={item.stock}
+                                                    />
 
                                                     <button
                                                         className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
@@ -605,10 +675,20 @@ const SalesPage = ({ products = [] }) => {
                             </button>
                             <button
                                 className="flex-1 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center justify-center"
-                                onClick={processPayment}
+                                onClick={processPayment} // Call the payment processing function
+                                disabled={isLoading} // Disable the button while loading
                             >
-                                <CreditCard size={20} className="mr-2" />
-                                Proses Pembayaran
+                                {isLoading ? (
+                                    <div className="animate-spin h-5 w-5 border-t-2 border-white rounded-full"></div> // Loading spinner
+                                ) : (
+                                    <>
+                                        <CreditCard
+                                            size={20}
+                                            className="mr-2"
+                                        />
+                                        Proses Pembayaran
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

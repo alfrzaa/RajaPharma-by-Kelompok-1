@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import Sidebar from "../components/Sidebar"; // Impor Sidebar
 import { Search, Plus, Filter, Edit, Trash2 } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Menampilkan data dari database
 const StockManagement = ({ medications }) => {
@@ -79,10 +80,20 @@ const StockManagement = ({ medications }) => {
 
     const confirmDelete = () => {
         if (currentMedication) {
+            // Dismiss all previous notifications
+            toast.dismiss();
+
             Inertia.delete(route("delete_medication", currentMedication.id), {
                 onSuccess: () => {
-                    toast.success("Obat berhasil dihapus!");
+                    console.log("Obat berhasil dihapus!");
+                    toast.success("Obat berhasil dihapus!", {
+                        onClose: () => {
+                            console.log("Notification closed");
+                        },
+                        autoClose: 5000,
+                    });
                     setShowConfirmDelete(false);
+                    Inertia.reload();
                 },
                 onError: () => {
                     toast.error("Gagal menghapus obat.");
@@ -90,6 +101,7 @@ const StockManagement = ({ medications }) => {
             });
         }
     };
+
     const validateForm = () => {
         const errors = [];
 
@@ -125,6 +137,7 @@ const StockManagement = ({ medications }) => {
     };
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Inside handleSubmit
     const handleSubmit = () => {
         const errors = validateForm();
         if (errors.length > 0) {
@@ -152,24 +165,43 @@ const StockManagement = ({ medications }) => {
             ? route("update_medication", currentMedication.id)
             : route("add_medication");
 
-        Inertia.visit(url, {
-            method,
-            data: medicationData,
-            preserveScroll: true,
-            onSuccess: () => {
-                setShowAddModal(false);
-                setCurrentMedication(null);
-                toast.success(
-                    currentMedication ? "Obat diperbarui!" : "Obat ditambahkan!"
-                );
+        Inertia.post(
+            url,
+            {
+                ...medicationData,
+                _method: method,
             },
-            onError: () => {
-                toast.error("Gagal menyimpan obat.");
-            },
-            onFinish: () => {
-                setIsSubmitting(false);
-            },
-        });
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.dismiss();
+                    toast.success(
+                        currentMedication
+                            ? "Obat berhasil diperbarui!"
+                            : "Obat diperbarui!",
+                        {
+                            autoClose: 3000, // in milliseconds
+                            toastId: `update-${currentMedication?.id}`, // optional, to avoid duplicates
+                        }
+                    );
+
+                    setTimeout(() => {
+                        toast.dismiss();
+                    }, 3000);
+
+                    setShowAddModal(false);
+                    setCurrentMedication(null);
+                },
+                onError: () => {
+                    toast.error("Gagal menyimpan obat.");
+                },
+                onFinish: () => {
+                    // the toast will be stay there if i didnt change something in the page,
+                    // but with this, it will take 3s to close the modal
+                    setIsSubmitting(false);
+                },
+            }
+        );
     };
 
     return (
@@ -180,6 +212,8 @@ const StockManagement = ({ medications }) => {
                 activeMenu={activeMenu}
                 setActiveMenu={setActiveMenu}
             />
+
+            {/* <ToastContainer position="top-right" /> */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="bg-white shadow-sm">
                     <div className="flex items-center justify-between p-4">
@@ -285,9 +319,14 @@ const StockManagement = ({ medications }) => {
                                                         {medication.stock}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        Rp{" "}
-                                                        {medication.price.toLocaleString()}
+                                                        Rp{"."}
+                                                        {parseInt(
+                                                            medication.price
+                                                        ).toLocaleString(
+                                                            "id-ID"
+                                                        )}
                                                     </td>
+
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         {new Date(
                                                             medication.expiryDate
