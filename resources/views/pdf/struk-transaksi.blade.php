@@ -57,8 +57,8 @@
                     <tr>
                         <td>{{ $item->name }}</td>
                         <td>x{{ $item->quantity }}</td>
-                        <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+                        <td>Rp{{ number_format($item->price, 0, ',', '.') }}</td>
+                        <td>Rp{{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -66,9 +66,9 @@
 
         <div class="line"></div>
 
-        <p class="total"><strong>Total:</strong> Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</p>
-        <p class="total"><strong>Tunai:</strong> Rp {{ number_format($transaction->cash, 0, ',', '.') }}</p>
-        <p class="total"><strong>Kembali:</strong> Rp {{ number_format($transaction->change, 0, ',', '.') }}</p>
+        <p class="total"><strong>Total:</strong> Rp{{ number_format($transaction->total_amount, 0, ',', '.') }}</p>
+        <p class="total"><strong>Tunai:</strong> Rp{{ number_format($transaction->cash, 0, ',', '.') }}</p>
+        <p class="total"><strong>Kembali:</strong> Rp{{ number_format($transaction->change, 0, ',', '.') }}</p>
 
         <div class="line"></div>
 
