@@ -319,8 +319,7 @@ const StockManagement = ({ medications }) => {
                                                         {medication.stock}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        Rp{"."}
-                                                        {parseInt(
+                                                        Rp{parseInt(
                                                             medication.price
                                                         ).toLocaleString(
                                                             "id-ID"
