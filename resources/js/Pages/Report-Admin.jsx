@@ -278,8 +278,7 @@ const ReportAdmin = () => {
                                             Total Penjualan
                                         </p>
                                         <p className="text-2xl font-bold text-gray-900">
-                                            Rp{" "}
-                                            {formatCurrency(
+                                            Rp{formatCurrency(
                                                 getSalesSummary().totalSales
                                             )}
                                         </p>
@@ -389,7 +388,7 @@ const ReportAdmin = () => {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <span className="text-gray-900">
-                                                            Rp{" "}
+                                                            Rp
                                                             {formatCurrency(
                                                                 transaction.total
                                                             )}
